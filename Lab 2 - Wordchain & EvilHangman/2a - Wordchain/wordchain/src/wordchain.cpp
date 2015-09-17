@@ -10,12 +10,14 @@ using namespace std;
 const string alphabet  = "abcdefghijklmnopqrstuvwxyz";
 
 void printContents(stack<string>& st);
-set<string> loadDictionary(string file);
-bool isValidWord(set<string> &dictionary, string word);
-bool hasBeenUsed(vector<string>& usedWords, string word);
+set<string> loadDictionary();
+bool isValidWord(set<string>& dictionary, string& word);
+bool hasBeenUsed(set<string>& usedWords, string& word);
+void emptyQueue(queue<stack<string>>& queueStack);
+void wordChain(set<string>& dictionary, string& word1, string& word2);
 
 int main() {
-    set<string> dictionary = loadDictionary("dictionary.txt");
+    set<string> dictionary = loadDictionary();
     cout << "Welcome to TDDD86 Word Chain." << endl
          << "If you give me two English words, I will transform the" << endl
          << "first into the second by changing one letter at a time." << endl
@@ -25,54 +27,56 @@ int main() {
 
     string firstWord, secondWord;
     cin >> firstWord >> secondWord;
-    vector<string> usedWords;
-    queue<stack<string>> myrko;
+
+    wordChain(dictionary, firstWord, secondWord);
+
+    cout << "Have a nice day!" << endl;
+    return 0;
+}
+
+void wordChain(set<string>& dictionary, string& firstWord, string& secondWord) {
+    set<string> usedWords;
+    queue<stack<string>> queueStack;
     stack<string> wordStack;
 
     wordStack.push(firstWord);
-    myrko.push(wordStack);
-    while (!myrko.empty()) {
-        stack<string> st = myrko.front();
-        myrko.pop();
-        if (st.top() == secondWord){
-            printContents(st);
+    queueStack.push(wordStack);
+    while (!queueStack.empty()) {
+        stack<string> firstStack = queueStack.front();
+        queueStack.pop();
+        if (firstStack.top() == secondWord){
+            printContents(firstStack);
+            emptyQueue(queueStack);
         } else {
-            string mumbojumbo = st.top();
-            for (size_t i = 0; i < mumbojumbo.size(); ++i) {
+            string temp = firstStack.top();
+            string copyTemp = temp;
+            for (size_t position = 0; position < temp.size(); ++position) {
                 for (size_t letter = 0; letter < alphabet.size(); ++letter) {
-                    mumbojumbo = mumbojumbo.substr(0, i) + alphabet[letter] + mumbojumbo.substr(i + 1, mumbojumbo.size() - 1);
-                    if (isValidWord(dictionary, mumbojumbo) && !hasBeenUsed(usedWords, mumbojumbo)) {
-                        stack<string> copy = st;
-                        copy.push(mumbojumbo);
-                        myrko.push(copy);
-                        usedWords.push_back(mumbojumbo);
+                    temp = copyTemp.substr(0, position) + alphabet[letter] + temp.substr(position + 1, temp.size() - 1);
+                    if (isValidWord(dictionary, temp) && !hasBeenUsed(usedWords, temp)) {
+                        stack<string> copyStack = firstStack;
+                        copyStack.push(temp);
+                        queueStack.push(copyStack);
+                        usedWords.insert(temp);
                     }
                 }
             }
         }
     }
-
-    return 0;
 }
 
-bool hasBeenUsed(vector<string>& usedWords, string word){
-    for (auto index = usedWords.begin(); index != usedWords.end(); ++index) {
-        if (*index == word) {
-            return true;
-        }
-    }
-
-    return false;
+bool hasBeenUsed(set<string>& usedWords, string& word){
+    return usedWords.count(word) == 1;
 }
 
-bool isValidWord(set<string>& dictionary, string word) {
+bool isValidWord(set<string>& dictionary, string& word) {
     return dictionary.count(word) == 1;
 }
 
-set<string> loadDictionary(string file){
+set<string> loadDictionary(){
     ifstream input;
     set<string> dictionary;
-    input.open(file);
+    input.open("dictionary.txt");
     string line;
     while(getline(input, line)) {
         dictionary.insert(line);
@@ -85,5 +89,12 @@ void printContents(stack<string>& st){
     while (!st.empty()){
         cout << st.top() << " ";
         st.pop();
+    }
+    cout << endl;
+}
+
+void emptyQueue(queue<stack<string>>& queueStack) {
+    while (!queueStack.empty()) {
+        queueStack.pop();
     }
 }
