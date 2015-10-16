@@ -7,34 +7,25 @@
 #include <vector>
 using namespace std;
 
-const string alphabet  = "abcdefghijklmnopqrstuvwxyz";
+const string alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-void printContents(stack<string>& st);
-set<string> loadDictionary();
+bool isCorrectWord(const string& possibleWord, const string& correctWord);
+void checkAllPossibleWords(set<string>& dictionary, queue<stack<string>>& queueStack, stack<string>& firstStack, set<string>& usedWords);
+void greetUser();
+void goodBye();
+void printContents(stack<string>& stck);
 bool isValidWord(set<string>& dictionary, string& word);
 bool hasBeenUsed(set<string>& usedWords, string& word);
 void emptyQueue(queue<stack<string>>& queueStack);
-void wordChain(set<string>& dictionary, string& word1, string& word2);
+set<string> loadDictionary();
 
 int main() {
     set<string> dictionary = loadDictionary();
-    cout << "Welcome to TDDD86 Word Chain." << endl
-         << "If you give me two English words, I will transform the" << endl
-         << "first into the second by changing one letter at a time." << endl
-         << endl;
-
-    cout << "Please type two words: ";
+    greetUser();
 
     string firstWord, secondWord;
     cin >> firstWord >> secondWord;
 
-    wordChain(dictionary, firstWord, secondWord);
-
-    cout << "Have a nice day!" << endl;
-    return 0;
-}
-
-void wordChain(set<string>& dictionary, string& firstWord, string& secondWord) {
     set<string> usedWords;
     queue<stack<string>> queueStack;
     stack<string> wordStack;
@@ -44,36 +35,73 @@ void wordChain(set<string>& dictionary, string& firstWord, string& secondWord) {
     while (!queueStack.empty()) {
         stack<string> firstStack = queueStack.front();
         queueStack.pop();
-        if (firstStack.top() == secondWord){
+        if (isCorrectWord(firstStack.top(), secondWord)) {
             printContents(firstStack);
             emptyQueue(queueStack);
         } else {
-            string temp = firstStack.top();
-            string copyTemp = temp;
-            for (size_t position = 0; position < temp.size(); ++position) {
-                for (size_t letter = 0; letter < alphabet.size(); ++letter) {
-                    temp = copyTemp.substr(0, position) + alphabet[letter] + temp.substr(position + 1, temp.size() - 1);
-                    if (isValidWord(dictionary, temp) && !hasBeenUsed(usedWords, temp)) {
-                        stack<string> copyStack = firstStack;
-                        copyStack.push(temp);
-                        queueStack.push(copyStack);
-                        usedWords.insert(temp);
-                    }
-                }
+            checkAllPossibleWords(dictionary, queueStack, firstStack, usedWords);
+        }
+    }
+
+    goodBye();
+    return 0;
+}
+
+/*
+ * Checks if a possible word equals the last desired word.
+ */
+bool isCorrectWord(const string& possibleWord, const string& correctWord) {
+    return possibleWord == correctWord;
+}
+
+/*
+ * Checks all the possible words with the dictionary and then adds them to the copyStack if they are valid.
+ */
+void checkAllPossibleWords(set<string>& dictionary, queue<stack<string>>& queueStack, stack<string>& firstStack, set<string>& usedWords) {
+    string tempWord = firstStack.top();
+    string copyTemp = tempWord;
+    for (size_t position = 0; position < tempWord.size(); ++position) {
+        for (size_t letter = 0; letter < alphabet.size(); ++letter) {
+            tempWord = copyTemp.substr(0, position) + alphabet[letter] + tempWord.substr(position + 1, tempWord.size() - 1);
+            if (isValidWord(dictionary, tempWord) && !hasBeenUsed(usedWords, tempWord)) {
+                stack<string> copyStack = firstStack;
+                copyStack.push(tempWord);
+                queueStack.push(copyStack);
+                usedWords.insert(tempWord);
             }
         }
     }
 }
 
-bool hasBeenUsed(set<string>& usedWords, string& word){
+/*
+ * Greets the user
+ */
+void greetUser() {
+    cout << "Welcome to TDDD86 Word Chain." << endl
+         << "If you give me two English words, I will transform the" << endl
+         << "first into the second by changing one letter at a time." << endl << endl
+         << "Please type two words: ";
+}
+
+void goodBye() {
+    cout << "Have a nice day!" << endl;
+}
+
+bool hasBeenUsed(set<string>& usedWords, string& word) {
     return usedWords.count(word) == 1;
 }
 
+/*
+ * Checks whether the possible word is in the dictionary.
+ */
 bool isValidWord(set<string>& dictionary, string& word) {
     return dictionary.count(word) == 1;
 }
 
-set<string> loadDictionary(){
+/*
+ * Loads the dictionary.
+ */
+set<string> loadDictionary() {
     ifstream input;
     set<string> dictionary;
     input.open("dictionary.txt");
@@ -85,14 +113,20 @@ set<string> loadDictionary(){
     return dictionary;
 }
 
-void printContents(stack<string>& st){
-    while (!st.empty()){
-        cout << st.top() << " ";
-        st.pop();
+/*
+ * Prints the content of the stack that shows the correct 'way' to get from word1 to word2.
+ */
+void printContents(stack<string>& stck) {
+    while (!stck.empty()){
+        cout << stck.top() << " ";
+        stck.pop();
     }
     cout << endl;
 }
 
+/*
+ * Empties the queue to free the memory making the program a bit faster.
+ */
 void emptyQueue(queue<stack<string>>& queueStack) {
     while (!queueStack.empty()) {
         queueStack.pop();

@@ -6,40 +6,20 @@
 
 using namespace std;
 
-/*
- * Ska vi göra en header fil med alla dessa funktions definitioner istället? Tror det skulle se bättre ut.
- */
 void greetUser();
-
-void loadGrid(Grid<char>& grid);
-
 void setGridSize(Grid<char>& grid, ifstream& input);
-
 void loadGridContent(Grid<char>& grid, ifstream& input);
-
+void loadGrid(Grid<char>& grid);
 void printGrid(Grid<char>& grid);
-
 void nextGeneration(Grid<char>& grid);
-
-void printGrid(Grid<char>& grid);
-
-bool isCellAlive(char cell);
-
-int countAliveNeighbors(Grid<char>& grid, int row, int column);
-
-bool enoughNeighborsToLive(Grid<char>& grid, int row, int column);
-
-void nextGeneration(Grid<char>& grid);
-
-void evolve(Grid<char>& grid, Grid<char> tempGrid);
-
-bool shouldBeBorn(Grid<char>& grid, int row, int column);
-
-bool shouldDie(Grid<char>& grid, int row, int column);
-
-char askForCommand();
-
+void evolve(Grid<char>& grid, Grid<char>& tempGrid);
 void animate(Grid<char>& grid);
+void setAlive(Grid<char>& grid, const int row, const int column, const bool alive);
+bool isCellAlive(const char cell);
+bool shouldBeBorn(const Grid<char>& grid, const int row, const int column);
+bool shouldDie(const Grid<char>& grid, const int row, const int column);
+int countAliveNeighbors(const Grid<char>& grid, const int row, const int column);
+char askForCommand();
 
 int main() {
     greetUser();
@@ -59,6 +39,9 @@ int main() {
     return 0;
 }
 
+/*
+ * Animates the grid to the console. Never stops so you have to use Ctrl + C to stop the program.
+ */
 void animate(Grid<char>& grid){
     while (true) {
         nextGeneration(grid);
@@ -68,6 +51,9 @@ void animate(Grid<char>& grid){
     }
 }
 
+/*
+ * Asks the user for the different choices.
+ */
 char askForCommand(){
     cout << "a)nimate, t)ick, q)uit? ";
     char choice;
@@ -75,6 +61,9 @@ char askForCommand(){
     return choice;
 }
 
+/*
+ * Greets the user with the default text.
+ */
 void greetUser() {
     cout << "Welcome to the TDDD86 Game of Life," << endl
          << "a simulation of the lifecycle of a bacteria colony." << endl
@@ -85,6 +74,9 @@ void greetUser() {
          << "  - A cell with 4 or more neighbors dies.\n" << endl;
 }
 
+/*
+ * Loads the grid based on the input file name.
+ */
 void loadGrid(Grid<char>& grid){
     ifstream input;
     cout << "Grid input file name? ";
@@ -99,14 +91,19 @@ void loadGrid(Grid<char>& grid){
     input.close();
 }
 
+/*
+ * Changes the size of grid.
+ */
 void setGridSize(Grid<char>& grid, ifstream& input){
-    int rows;
-    int columns;
+    int rows, columns;
     input >> rows;
     input >> columns;
     grid.resize(rows, columns);
 }
 
+/*
+ *  Loads the actual file content into the grid
+ */
 void loadGridContent(Grid<char>& grid, ifstream& input){
     string line;
     getline(input, line); //skip a line
@@ -116,9 +113,11 @@ void loadGridContent(Grid<char>& grid, ifstream& input){
             grid.set(row, column, line[column]);
         }
     }
-    //cout << grid.toString() << endl;
 }
 
+/*
+ * Prints the grids contents to the console.
+ */
 void printGrid(Grid<char>& grid) {
     for (int row = 0; row < grid.numRows(); ++row) {
         for (int column = 0; column < grid.numCols(); ++column) {
@@ -128,20 +127,32 @@ void printGrid(Grid<char>& grid) {
     }
 }
 
-bool isCellAlive(char cell) {
+/*
+ * Checks to see if a cell is alive. It is alive if it is equal to 'X'.
+ */
+bool isCellAlive(const char cell) {
     return cell == 'X';
 }
 
-bool shouldBeBorn(Grid<char>& grid, int row, int column) {
+/*
+ * Checks to see if a cell should be born. It checks if the cell has atleast 3 alive neighbors.
+ */
+bool shouldBeBorn(const Grid<char>& grid, const int row, const int column) {
     return countAliveNeighbors(grid, row, column) == 3;
 }
 
-bool shouldDie(Grid<char>& grid, int row, int column) {
+/*
+ * Checks to see if a cell should die. It checks whether it has more than 3 neighbors (overpopulation) or less than 2.
+ */
+bool shouldDie(const Grid<char>& grid, const int row, const int column) {
     int neighbors = countAliveNeighbors(grid, row, column);
     return neighbors > 3 || neighbors < 2;
 }
 
-int countAliveNeighbors(Grid<char>& grid, int row, int column) {
+/*
+ * Returns the amount of alive neighbors for a specific cell.
+ */
+int countAliveNeighbors(const Grid<char>& grid, const int row, const int column) {
     int neighbors = 0;
 
     for (int currentRow = row - 1; currentRow <= row + 1; ++currentRow) {
@@ -159,29 +170,36 @@ int countAliveNeighbors(Grid<char>& grid, int row, int column) {
     return neighbors;
 }
 
-
-
-void setAlive(Grid<char>& grid, int row, int col, bool alive){
+/*
+ * Sets the cell to alive or dead based on the bool alive.
+ */
+void setAlive(Grid<char>& grid, const int row, const int column, const bool alive) {
     if (alive){
-        grid.set(row, col, 'X');
+        grid.set(row, column, 'X');
     } else {
-        grid.set(row, col, '-');
+        grid.set(row, column, '-');
     }
 }
 
+/*
+ * Evolves to the next generation.
+ */
 void nextGeneration(Grid<char>& grid) {
     Grid<char> temp = grid;
     evolve(grid, temp);
 }
 
-void evolve(Grid<char>& grid, Grid<char> tempGrid){
+/*
+ * Function that evolves the grid to the next generation.
+ */
+void evolve(Grid<char>& grid, Grid<char>& tempGrid) {
     for (int row = 0; row < grid.numRows(); ++row) {
         for (int column = 0; column < grid.numCols(); ++column) {
-            if (!isCellAlive(tempGrid.get(row, column))) { // cell is dead
+            if (!isCellAlive(tempGrid.get(row, column))) {  // cell is dead
                 if (shouldBeBorn(tempGrid, row, column)) {
                     setAlive(grid, row, column, true);
                 }
-            } else { // cell is alive
+            } else {                                        // cell is alive
                 if (shouldDie(tempGrid, row, column)) {
                     setAlive(grid, row, column, false);
                 }
