@@ -44,10 +44,10 @@ int main(int argc, char *argv[]) {
         Point p(x, y);
         tour.insertNearest(p);
         //uncomment the 4 lines below to animate
-        //tour.draw(scene);
-        //std::chrono::milliseconds dura(50);
-        //std::this_thread::sleep_for(dura);
-        //a.processEvents();
+        tour.draw(scene);
+        std::chrono::milliseconds dura(150);
+        std::this_thread::sleep_for(dura);
+        a.processEvents();
     }
     input.close();
 
