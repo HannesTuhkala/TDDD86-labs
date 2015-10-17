@@ -1,29 +1,52 @@
-// This is the .h file you will edit and turn in.
-// We have provided a skeleton for you,
-// but you must finish it as described in the spec.
-// Also remove these comments here and add your own, as well as on the members.
-// TODO: remove this comment header
-
 #ifndef TOUR_H
 #define TOUR_H
 
 #include "Node.h"
 #include "Point.h"
 
+/*
+ * A circular linked list of Nodes.
+*/
 class Tour {
 public:
 
+    /*
+     * Constructor: initializes the first node.
+     */
     Tour();
-    Tour(Point a, Point b, Point c, Point d);
+    /*
+     * Destructor: deletes every node in the linked list.
+     */
     ~Tour();
-    void show();
-    void draw(QGraphicsScene* scene);
-    int size();
-    double distance();
-    void insertNearest(Point p);
-    void insertSmallest(Point p);
+    /*
+     * Prints each node to standard output.
+     */
+    void show() const;
+    /*
+     * Draws each node as a line from the previous node to the next node.
+     */
+    void draw(QGraphicsScene* scene) const;
+    /*
+     * Returns how many nodes there are in the linked list at the moment.
+     */
+    int size() const;
+    /*
+     * Returns the total distance around the nodes from the startnode to the endnode.
+     */
+    double distance() const;
+    /*
+     * Inserts the Point p after the node which the distance is the closest/lowest.
+     */
+    void insertNearest(const Point p);
+    /*
+     * Inserts the Point p after the node that is the most optimal. Iterates the linked list to find the total length of it and where to put the Point p.
+     */
+    void insertSmallest(const Point p);
 
 private:
+    /*
+     * Our initial node
+    */
     Node* firstNode;
 };
 

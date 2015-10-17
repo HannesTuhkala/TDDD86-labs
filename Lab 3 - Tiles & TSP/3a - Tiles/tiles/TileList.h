@@ -4,6 +4,9 @@
 #include <QGraphicsScene>
 #include "Tile.h"
 
+/*
+ * A list of Tiles. Tiles at the bottom of the list has the highest z-index while the Tiles at the top of the list has the lowest z-index.
+*/
 class TileList {
 public:
 

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include "Tour.h"
 #include "Node.h"
 #include "Point.h"
@@ -8,74 +9,69 @@ Tour::Tour()
     firstNode = nullptr;
 }
 
-Tour::Tour(Point a, Point b, Point c, Point d) {
-    // Om vi bara har en nod i programmet.. hur gör vi så den pekar på sig själv?
-    firstNode = nullptr;
-    Node* aNode = new Node(a, nullptr);
-    firstNode = aNode;
-    aNode->next = aNode;
-
-    Node* bNode = new Node(b, firstNode);
-    aNode->next = bNode;
-
-    Node* cNode = new Node(c, firstNode);
-    bNode->next = cNode;
-
-    Node* dNode = new Node(d, firstNode);
-    cNode->next = dNode;
-}
-
+// fungerar inte som det ska. Programmet körs fortfarande.
 Tour::~Tour()
 {
-    // TODO: write this member
+    Node* currentNode = firstNode;
+    Node* tempNode;
+
+    while (currentNode != nullptr) {
+        tempNode = currentNode;
+        currentNode = currentNode->next;
+        delete tempNode;
+    }
 }
 
-void Tour::show()
+void Tour::show() const
 {
     Node* currentNode = firstNode;
+
+    // if linked list is empty print newline
     if (currentNode == nullptr) {
         cout << endl;
-    } else if (currentNode->next == firstNode) {
-        cout << currentNode->toString() << endl;
+    } else if (currentNode->next == firstNode) { // if list only has one node, print it
+        cout << currentNode->point.toString() << endl;
     } else {
+        // print each node until the currentnode is equal to the firstnode
         do {
-            cout << currentNode->toString() << endl;
+            cout << currentNode->point.toString() << endl;
             currentNode = currentNode->next;
         } while (currentNode != firstNode);
     }
 }
 
-void Tour::draw(QGraphicsScene *scene)
+void Tour::draw(QGraphicsScene *scene) const
 {
     Node* currentNode = firstNode;
     Node* nextNode = nullptr;
 
+    // if linked list is empty do nothing.
     if (currentNode == nullptr) {
         return;
-    } else if (currentNode->next == firstNode) {
+    } else if (currentNode->next == firstNode) { // if only one node just draw it
         currentNode->point.draw(scene);
+    } else { // draw all nodes until we get to the start
+        do {
+            nextNode = currentNode->next;
+            currentNode->point.drawTo(nextNode->point, scene);
+            currentNode = nextNode;
+        } while(currentNode != firstNode);
     }
-
-    do {
-        nextNode = currentNode->next;
-        // vet inte om den här behövs
-        //currentNode->point.draw(scene);
-        currentNode->point.drawTo(nextNode->point, scene);
-        currentNode = nextNode;
-    } while(currentNode != firstNode);
 }
 
-int Tour::size()
+int Tour::size() const
 {
     int size = 0;
     Node* currentNode = firstNode;
 
+    // if linked list is empty it obviously has 0 nodes => size = 0
     if (currentNode == nullptr) {
         return size;
-    } else if (currentNode->next == firstNode) {
+    } else if (currentNode->next == firstNode) { // if node points to itself => size = 1
         return ++size;
     }
 
+    // go through every node in the linked list and increment size
     do {
         ++size;
         currentNode = currentNode->next;
@@ -84,16 +80,18 @@ int Tour::size()
     return size;
 }
 
-double Tour::distance()
+double Tour::distance() const
 {
     double distance = 0.0;
     Node* currentNode = firstNode;
     Node* nextNode = nullptr;
 
+    // if linked list has 0 or 1 node it obviously doesn't have any distance so return 0.
     if (currentNode == nullptr || currentNode->next == firstNode) {
         return distance;
     }
 
+    // go through node for node and add the distance from the previous node to the next node until we get back to the start.
     do {
         nextNode = currentNode->next;
         distance += currentNode->point.distanceTo(nextNode->point);
@@ -103,12 +101,13 @@ double Tour::distance()
     return distance;
 }
 
-void Tour::insertNearest(Point p)
+void Tour::insertNearest(const Point p)
 {
     Node* closestNode;
     Node* currentNode = firstNode;
     double lowestDistance, currentDistance;
 
+    // if list is empty then just add it..
     if (currentNode == nullptr) {
         Node* newNode = new Node(p, nullptr);
         newNode->next = newNode;
@@ -119,8 +118,11 @@ void Tour::insertNearest(Point p)
         closestNode = currentNode;
         lowestDistance = currentNode->point.distanceTo(p);
 
+        // for every node in the linked list check the distance between it and the new point.
         do {
             currentDistance = currentNode->point.distanceTo(p);
+
+            // if current distance is less than the current lowest distance we got us a winner
             if (currentDistance < lowestDistance) {
                 closestNode = currentNode;
                 lowestDistance = currentDistance;
@@ -129,12 +131,51 @@ void Tour::insertNearest(Point p)
             currentNode = currentNode->next;
         } while(currentNode != firstNode);
 
+        // insert the new point as a node after the closest node.
         Node* newNode = new Node(p, closestNode->next);
         closestNode->next = newNode;
     }
 }
 
-void Tour::insertSmallest(Point p)
+void Tour::insertSmallest(const Point p)
 {
-    // TODO: write this member
+    Node* currentNode = firstNode;
+    Node* bestNode = nullptr;
+    double lowestDistance = std::numeric_limits<double>::max(), currentDistance = 0.0;
+
+    // if list is empty then just add it..
+    if (currentNode == nullptr) {
+        Node* newNode = new Node(p, nullptr);
+        newNode->next = newNode;
+        firstNode = newNode;
+    } else {
+        // does the length change if we put the point in the first position?
+        // TODO: look this up!!
+
+        // iterate every node in the linked list and put in the new node and see distance for each one
+        do {
+            // add the node to the current position
+            Node* newNode = new Node(p, currentNode->next);
+            currentNode->next = newNode;
+
+            // get distance
+            currentDistance = distance();
+
+            // take away the node
+            currentNode->next = newNode->next;
+            newNode->next = nullptr;
+
+            // if we got a better distance overall then this is our best node.
+            if (currentDistance < lowestDistance) {
+                bestNode = currentNode;
+                lowestDistance = currentDistance;
+            }
+
+            currentNode = currentNode->next;
+        } while (currentNode != firstNode);
+
+        // insert the node after the best node.
+        Node* newNode = new Node(p, bestNode->next);
+        bestNode->next = newNode;
+    }
 }
