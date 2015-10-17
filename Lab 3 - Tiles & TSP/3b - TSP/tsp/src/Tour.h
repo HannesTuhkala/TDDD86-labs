@@ -37,11 +37,11 @@ public:
     /*
      * Inserts the Point p after the node which the distance is the closest/lowest.
      */
-    void insertNearest(const Point p);
+    void insertNearest(const Point& p);
     /*
      * Inserts the Point p after the node that is the most optimal. Iterates the linked list to find the total length of it and where to put the Point p.
      */
-    void insertSmallest(const Point p);
+    void insertSmallest(const Point& p);
 
 private:
     /*

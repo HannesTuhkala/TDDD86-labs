@@ -23,7 +23,7 @@ public:
     /*
      * Adds a tile to the bottom of the TileList (it gets the highest z-index).
     */
-    void addTile(const Tile tile);
+    void addTile(const Tile& tile);
 
     /*
      * Draws all the tiles in the TileList. Tiles at the top of the TileList appears at the bottom of the screen, while those at the bottom appears at the top of the screen.

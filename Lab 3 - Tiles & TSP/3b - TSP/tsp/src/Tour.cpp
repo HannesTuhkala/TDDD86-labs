@@ -101,7 +101,7 @@ double Tour::distance() const
     return distance;
 }
 
-void Tour::insertNearest(const Point p)
+void Tour::insertNearest(const Point& p)
 {
     Node* closestNode;
     Node* currentNode = firstNode;
@@ -137,7 +137,7 @@ void Tour::insertNearest(const Point p)
     }
 }
 
-void Tour::insertSmallest(const Point p)
+void Tour::insertSmallest(const Point& p)
 {
     Node* currentNode = firstNode;
     Node* bestNode = nullptr;

@@ -12,7 +12,7 @@ TileList::~TileList()
 	delete[] tiles;
 }
 
-void TileList::addTile(const Tile tile)
+void TileList::addTile(const Tile& tile)
 {
 	if (size == capacity) {
 		tiles = expandArray(tiles);
