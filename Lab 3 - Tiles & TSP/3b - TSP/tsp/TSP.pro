@@ -5,7 +5,6 @@ HEADERS = $$PWD/src/*.h
 #HEADERS += $$PWD/lib/*.h
 
 QMAKE_CXXFLAGS += -std=c++11
-
 INCLUDEPATH += $$PWD/lib/
 
 # Copies the given files to the destination directory
