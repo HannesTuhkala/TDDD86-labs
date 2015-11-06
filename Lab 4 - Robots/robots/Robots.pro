@@ -1,5 +1,6 @@
 TEMPLATE = app
 QT += widgets
+CONFIG += c++11
 HEADERS += mainwindow.h \
     utilities.h \
     constants.h \

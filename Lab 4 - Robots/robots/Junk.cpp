@@ -14,3 +14,9 @@ void Junk::draw(QGraphicsScene *scene) const {
     scene->addEllipse(QRectF(corner.x * UNIT_WIDTH, corner.y * UNIT_HEIGHT,
                              JUNK_RADIUS, JUNK_RADIUS), QPen(), QBrush(JUNK_COLOR));
 }
+
+bool Junk::attacks(const Unit& u) const {
+	return false;
+}
+
+void moveTowards(const Unit& u) {}

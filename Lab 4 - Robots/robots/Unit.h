@@ -22,6 +22,8 @@ public:
     */
     Point asPoint() const;
 
+	virtual void draw() const;
+
     /*
     * Am I in the same square as u?
     */
@@ -30,12 +32,12 @@ public:
     /*
     * Can I catch u in one move?
     */
-    bool attacks(const Unit& u) const;
+    virtual bool attacks(const Unit& u) const;
 
     /*
     * Take one step closer to u
     */
-    void moveTowards(const Unit& u);
+    virtual void moveTowards(const Unit& u);
 
     /*
     * Teleport. Does not check for collision

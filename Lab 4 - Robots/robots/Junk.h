@@ -13,7 +13,8 @@ class Junk : public Unit {
 public:
     Junk();
     Junk(Unit c);
-
+	void moveTowards(const Unit& u) override;
+	bool attacks(const Unit& u) const override;
     /*
     * Draws this junk onto the given QGraphicsScene.
     */

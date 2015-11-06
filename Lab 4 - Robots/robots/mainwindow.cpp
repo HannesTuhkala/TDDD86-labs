@@ -79,41 +79,36 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
         bool actionTaken = false;
         bool waiting = false;
 
-        if (e->modifiers() == Qt::KeypadModifier) {
+        if (e->modifiers() != Qt::KeypadModifier) {
             switch (e->key()) {
-            case Qt::Key_1:
+            case Qt::Key_Less:
                 actionTaken = tryMove(hero, Point{pt.x - 1, pt.y + 1});
                 break;
-            case Qt::Key_2:
+            case Qt::Key_S:
                 actionTaken = tryMove(hero, Point{pt.x, pt.y + 1});
                 break;
-            case Qt::Key_3:
+            case Qt::Key_C:
                 actionTaken = tryMove(hero, Point{pt.x + 1, pt.y + 1});
                 break;
-            case Qt::Key_4:
+            case Qt::Key_A:
                 actionTaken = tryMove(hero, Point{pt.x - 1, pt.y});
                 break;
-            case Qt::Key_6:
+            case Qt::Key_D:
                 actionTaken = tryMove(hero, Point{pt.x + 1, pt.y});
                 break;
-            case Qt::Key_7:
+            case Qt::Key_Q:
                 actionTaken = tryMove(hero, Point{pt.x - 1, pt.y - 1});
                 break;
-            case Qt::Key_8:
+            case Qt::Key_W:
                 actionTaken = tryMove(hero, Point{pt.x, pt.y - 1});
                 break;
-            case Qt::Key_9:
+            case Qt::Key_E:
                 actionTaken = tryMove(hero, Point{pt.x + 1, pt.y - 1});
                 break;
-            case Qt::Key_5:
+            case Qt::Key_Space:
                 actionTaken = true;
                 waiting = true;
                 break;
-            default:
-                QWidget::keyPressEvent(e);
-            }
-        } else {
-            switch (e->key()) {
             case Qt::Key_T:
                 gameState.teleportHero();
                 actionTaken = true;
