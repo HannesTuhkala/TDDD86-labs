@@ -13,37 +13,33 @@ class Board {
 	/*
 	Constructs a board.
 	*/
-	Board(unsigned int size);
+	Board(const unsigned int size);
 	/*
 	Destroys a board.
 	*/
-	~Board();
+	~Board() {}
 	/*
 	Shuffles the board.
 	*/
-	void shuffleBoard() const;
+	void shuffleBoard();
 	/*
 	Gets a string representation of the board.
 	*/
 	std::string toString() const;
 	/*
-	Checks whether a given string is a valid word to enter.
+	Checks whether the char given is a neighbor to the given index, or if it is
+	equal to the char of the given index.
 	*/
-	bool isValid() const;
-
+	bool isNeighbor(int row, int col, char c) const;
 	private:
 	/*
-	The cubes,
+	The cubes
 	*/
-	Grid<Cube*> cubes;
+	Grid<Cube> cubes;
 	/*
 	The size of the board.
 	*/
 	unsigned int size;
-	/*
-	Checks whether the char given is a neighbor to the given index.
-	*/
-	bool isNeighbor(int index, char c);
 };
 
 

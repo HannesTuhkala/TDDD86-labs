@@ -1,5 +1,5 @@
 /*
-* This is the datastructure för each cube
+* This is the datastructure for each cube
 */
 #ifndef CUBE_H
 #define CUBE_H
@@ -7,6 +7,7 @@
 
 class Cube {
 	public:
+	Cube();
 	/*
 	Constructs a Cube with the sides of the given string
 	 */

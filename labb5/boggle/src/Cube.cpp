@@ -1,6 +1,8 @@
 #include "Cube.h"
 #include "random.h"
 
+Cube::Cube() {}
+
 Cube::Cube(std::string sides) {
 	this->sides = sides;
 	shuffle();
