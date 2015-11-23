@@ -3,27 +3,9 @@
 
 static const int NUM_CUBES = 16;   // the number of cubes in the game
 static const int BOARD_SIZE = 4;
-static const std::string CUBE_SIDES[NUM_CUBES] = {        // the letters on all 6 sides of every cube
-/*"AAAAAA", "BBBBBB", "CCCCCC", "DDDDDD",
-"EEEEEE", "FFFFFF", "GGGGGG", "HHHHHH",
-"IIIIII", "JJJJJJ", "KKKKKK", "LLLLLL",
-"MMMMMM", "NNNNNN", "OOOOOO", "PPPPPP"*/
-   "AAEEGN", "ABBJOO", "ACHOPS", "AFFKPS",
-   "AOOTTW", "CIMOTU", "DEILRX", "DELRVY",
-   "DISTTY", "EEGHNW", "EEINSU", "EHRTVW",
-   "EIOSST", "ELRTTY", "HIMNQU", "HLNNRZ"
-};
 
 Board::Board() {
-	unsigned int sideIndex = 0;
 	cubes = Grid<Cube>(BOARD_SIZE, BOARD_SIZE);
-	for (unsigned int i = 0; i < BOARD_SIZE; ++i) {
-		for (unsigned int j = 0; j < BOARD_SIZE; ++j) {
-			cubes[i][j] = Cube(CUBE_SIDES[sideIndex]);
-			sideIndex++;
-		}
-	}
-	shuffleBoard();
 }
 
 void Board::shuffleBoard() {
@@ -31,6 +13,16 @@ void Board::shuffleBoard() {
 		c.shuffle();
 	}
 	shuffle(cubes); 
+}
+
+void Board::changeCubeSides(std::string* cubeSides) {
+	unsigned int sideIndex = 0;
+	for (unsigned int i = 0; i < BOARD_SIZE; ++i) {
+		for (unsigned int j = 0; j < BOARD_SIZE; ++j) {
+			cubes[i][j] = Cube(cubeSides[sideIndex]);
+			sideIndex++;
+		}
+	}
 }
 
 std::string Board::toString() const {
@@ -58,10 +50,5 @@ bool Board::isNeighbor(int row, int col, char c) const {
 		if (cubes[index.first][index.second].sideUp() == c) return true;
 	}
 	return false;
-}
-
-int factorial(int n) {
-	if (n == 0) return 1;
-	else return n*factorial(n - 1);
 }
 

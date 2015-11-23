@@ -19,6 +19,11 @@ class Board {
 	*/
 	void shuffleBoard();
 	/*
+	Changes the sides of the cubes. Parameter sides must be 16 strings of 6
+	characters each.
+	*/
+	void changeCubeSides(std::string* sides);
+	/*
 	Gets a string representation of the board.
 	*/
 	std::string toString() const;

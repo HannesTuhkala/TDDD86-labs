@@ -9,7 +9,8 @@
 
 #include <iostream>
 #include <string>
-// TODO: include any other header files you need
+#include "Board.h"
+#include "Cube.h"
 
 using namespace std;
 
@@ -17,12 +18,21 @@ class Boggle {
 public:
     const string DICTIONARY_FILE = "EnglishWords.dat";
     const int MIN_WORD_LENGTH = 4;
+	/*
+	Constructs a Boggle object with a standard Board configuration.
+	*/
+	Boggle();
 
-    // TODO: decide the public member functions and declare them
+	~Boggle();
+	
+	void shuffleBoard();
+
+	void insertCustomCubes(std::string* sides);
+
+	std::string boardToString() const;
 
 private:
-    // TODO: decide the private member variables/functions and declare them
-
+	Board* board;
 };
 
 #endif
