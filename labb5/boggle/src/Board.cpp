@@ -9,13 +9,15 @@ Board::Board() {
 }
 
 void Board::shuffleBoard() {
-	for (Cube c : cubes) {
-		c.shuffle();
+	for (unsigned int i = 0; i < BOARD_SIZE; ++i) {
+		for (unsigned int j = 0; j < BOARD_SIZE; ++j) {
+			cubes[i][j].shuffle();
+		}
 	}
 	shuffle(cubes); 
 }
 
-void Board::changeCubeSides(std::string* cubeSides) {
+void Board::changeCubeSides(const std::string* cubeSides) {
 	unsigned int sideIndex = 0;
 	for (unsigned int i = 0; i < BOARD_SIZE; ++i) {
 		for (unsigned int j = 0; j < BOARD_SIZE; ++j) {

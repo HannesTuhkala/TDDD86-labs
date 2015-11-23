@@ -11,7 +11,8 @@
 #include "strlib.h"
 
 static const int CUBE_SIDES = 6;   // the number of sides on each cube
-static const std::string CUBE_SIDES[NUM_CUBES] = {        // the letters on all 6 sides of every cube
+static const int NUM_CUBES = 16;
+static const std::string DEFAULT_CUBES[NUM_CUBES] = {        // the letters on all 6 sides of every cube
 /*"AAAAAA", "BBBBBB", "CCCCCC", "DDDDDD",
 "EEEEEE", "FFFFFF", "GGGGGG", "HHHHHH",
 "IIIIII", "JJJJJJ", "KKKKKK", "LLLLLL",
@@ -24,10 +25,10 @@ static const std::string CUBE_SIDES[NUM_CUBES] = {        // the letters on all 
 
 Boggle::Boggle() {
 	Board* board = new Board();
-	board->changeCubeSides(CUBE_SIDES); //standard config
+	board->changeCubeSides(DEFAULT_CUBES); //standard config
 }
 
-Boggle::~Board() {
+Boggle::~Boggle() {
 	delete board;
 }
 
@@ -35,7 +36,7 @@ void Boggle::shuffleBoard() {
 	board->shuffleBoard();
 }
 
-void Boggle::insertCustomCubes(std::string* sides) {
+void Boggle::insertCustomCubes(const std::string* sides) {
 	board->changeCubeSides(sides);
 }
 

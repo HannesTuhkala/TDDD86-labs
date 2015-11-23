@@ -11,7 +11,16 @@
 #include "strlib.h"
 #include "Board.h"
 #include "Cube.h"
-// TODO: include any other header files you need
+#include <cctype>
+
+static const int NUM_CUBES = 16;
+
+void clearConsole();
+void playOneGame(Boggle& boggle);
+void inputCustomSides(Boggle& boggle);
+std::string* createSides(std::string ans);
+bool isAlpha(std::string& text);
+bool randomBoard();
 
 /*
  * Plays one game of Boggle using the given boggle game state object.
@@ -24,11 +33,49 @@ void playOneGame(Boggle& boggle) {
 //	std::cin >> c;
 //	std::cout << board->isNeighbor(3, 3, c) << std::endl;
 //	delete board;
-	
+	if (randomBoard()) {
+		boggle.shuffleBoard();
+	} else {
+		inputCustomSides(boggle);
+	}
 }
 
-bool customInput() {
-	std::cout << "Custom input? (y/n): ";
+void inputCustomSides(Boggle& boggle) {
+	std::cout << "Enter 16 characters A-Z: " << std::endl;
+	std::string ans;
+	while (true) {
+		std::cin >> ans;
+		if (ans.length() != 16) {
+			std::cout << "Please type a string of exactly 16 characters:" <<
+			std::endl;
+		} else if (!isAlpha(ans)){
+			std::cout << "Please type a string with only characters from A-Z:" <<
+			std::endl;
+		} else break;
+	}
+	ans = toUpperCase(ans);
+	//std::string* sides = createSides(ans);
+	//boggle.insertCustomCubes(sides);
+}
+
+std::string* createSides(std::string ans) {
+	std::string sides[NUM_CUBES];
+	for (int i = 0; i < NUM_CUBES; ++i) {
+		sides[i].push_back(ans[i]);
+		sides[i] += "AAAAA"; //doesn't really matter which characters you append
+	}
+	return sides;
+}
+
+bool isAlpha(std::string& text) {
+	for (char c : text) {
+		if (!isalpha(c)) return false;
+	}
+	return true;
+}
+
+bool randomBoard() {
+	std::cout << "Do you want to generate a random board? (y/n): ";
 	std::string ans;
 	while (true) {
 		std::cin >> ans;

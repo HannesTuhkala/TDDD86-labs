@@ -27,7 +27,7 @@ public:
 	
 	void shuffleBoard();
 
-	void insertCustomCubes(std::string* sides);
+	void insertCustomCubes(const std::string* sides);
 
 	std::string boardToString() const;
 
