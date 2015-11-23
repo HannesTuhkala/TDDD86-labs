@@ -8,10 +8,6 @@ Cube::Cube(std::string sides) {
 	shuffle();
 }
 
-Cube::~Cube() {
-	//delete sides;
-}
-
 void Cube::shuffle() {
 	sideUpIndex = randomInteger(0, SIDES - 1);
 }

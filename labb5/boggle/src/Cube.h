@@ -13,10 +13,6 @@ class Cube {
 	 */
 	Cube(std::string sides);
 	/*
-	Destroys a Cube
-	*/
-	~Cube();
-	/*
 	Returns the character of the side that is up.
 	*/
 	char sideUp() const;

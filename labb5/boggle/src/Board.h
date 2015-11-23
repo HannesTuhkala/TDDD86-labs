@@ -13,11 +13,7 @@ class Board {
 	/*
 	Constructs a board.
 	*/
-	Board(const unsigned int size);
-	/*
-	Destroys a board.
-	*/
-	~Board() {}
+	Board();
 	/*
 	Shuffles the board.
 	*/
@@ -36,10 +32,6 @@ class Board {
 	The cubes
 	*/
 	Grid<Cube> cubes;
-	/*
-	The size of the board.
-	*/
-	unsigned int size;
 };
 
 

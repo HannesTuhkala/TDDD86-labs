@@ -18,7 +18,7 @@
  */
 void playOneGame(Boggle& boggle) {
     // TODO: implement this function (and add any other functions you like to help you)
-	Board* board = new Board(4);
+	Board* board = new Board();
 	std::cout << board->toString() << std::endl;
 	std::cout << "Enter random character: ";
 	char c;

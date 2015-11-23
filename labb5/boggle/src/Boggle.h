@@ -17,7 +17,6 @@ class Boggle {
 public:
     const string DICTIONARY_FILE = "EnglishWords.dat";
     const int MIN_WORD_LENGTH = 4;
-    const int BOARD_SIZE = 4;
 
     // TODO: decide the public member functions and declare them
 
