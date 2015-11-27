@@ -9,8 +9,6 @@
 #include "shuffle.h"
 #include "strlib.h"
 
-static const int CUBE_SIDES = 6;   // the number of sides on each cube
-
 Boggle::Boggle() {}
 
 void Boggle::setDefaultBoard() {

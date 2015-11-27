@@ -22,9 +22,13 @@ public:
 	Constructs a Boggle object with a standard Board configuration.
 	*/
 	Boggle();
-
+	/*
+	Sets the board to the default cube sides
+	*/
 	void setDefaultBoard();
-
+	/*
+	Sets the board to custom cube sides.
+	*/
 	void insertCustomCubes(const vector<string>& sides);
 
 	string boardToString() const;
