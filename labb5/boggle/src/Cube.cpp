@@ -5,7 +5,7 @@ Cube::Cube() {}
 
 Cube::Cube(std::string sides) {
 	this->sides = sides;
-	shuffle();
+	sideUpIndex = 0;
 }
 
 void Cube::shuffle() {
@@ -14,4 +14,8 @@ void Cube::shuffle() {
 
 char Cube::sideUp() const {
 	return sides[sideUpIndex];
+}
+
+void Cube::setSideUp(const unsigned int index) {
+	sideUpIndex = index;
 }

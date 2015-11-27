@@ -2,13 +2,13 @@
 // We have provided a minimal skeleton for you,
 // but you must finish it as described in the spec.
 // Also remove these comments here and add your own, as well as on the members.
-// TODO: remove this comment header and replace it with your own
 
 #ifndef _boggle_h
 #define _boggle_h
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include "Board.h"
 #include "Cube.h"
 
@@ -23,16 +23,14 @@ public:
 	*/
 	Boggle();
 
-	~Boggle();
-	
-	void shuffleBoard();
+	void setDefaultBoard();
 
-	void insertCustomCubes(const std::string* sides);
+	void insertCustomCubes(const vector<string>& sides);
 
-	std::string boardToString() const;
+	string boardToString() const;
 
 private:
-	Board* board;
+	Board board;
 };
 
 #endif

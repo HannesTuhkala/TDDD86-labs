@@ -20,6 +20,10 @@ class Cube {
 	Selects a random side on the cube to be up.
 	*/
 	void shuffle();
+	/*
+	Sets a custom index to be the side facing up.
+	*/
+	void setSideUp(const unsigned int index);
 
 	private:
 	/*

@@ -15,14 +15,14 @@ class Board {
 	*/
 	Board();
 	/*
-	Shuffles the board.
-	*/
-	void shuffleBoard();
-	/*
 	Changes the sides of the cubes. Parameter sides must be 16 strings of 6
 	characters each.
 	*/
-	void changeCubeSides(const std::string* sides);
+	void setCubeSides(const std::vector<std::string>& sides);
+	/*
+	Sets the cube sides to the default sides.
+	*/
+	void setDefault();
 	/*
 	Gets a string representation of the board.
 	*/
@@ -33,6 +33,10 @@ class Board {
 	*/
 	bool isNeighbor(int row, int col, char c) const;
 	private:
+	/*
+	Shuffles the board.
+	*/
+	void shuffleBoard();
 	/*
 	The cubes
 	*/

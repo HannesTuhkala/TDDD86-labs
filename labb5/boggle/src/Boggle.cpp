@@ -2,7 +2,6 @@
 // We have provided a minimal skeleton for you,
 // but you must finish it as described in the spec.
 // Also remove these comments here and add your own.
-// TODO: remove this comment header and replace it with your own
 
 #include <sstream>
 #include "Boggle.h"
@@ -11,36 +10,19 @@
 #include "strlib.h"
 
 static const int CUBE_SIDES = 6;   // the number of sides on each cube
-static const int NUM_CUBES = 16;
-static const std::string DEFAULT_CUBES[NUM_CUBES] = {        // the letters on all 6 sides of every cube
-/*"AAAAAA", "BBBBBB", "CCCCCC", "DDDDDD",
-"EEEEEE", "FFFFFF", "GGGGGG", "HHHHHH",
-"IIIIII", "JJJJJJ", "KKKKKK", "LLLLLL",
-"MMMMMM", "NNNNNN", "OOOOOO", "PPPPPP"*/
-   "AAEEGN", "ABBJOO", "ACHOPS", "AFFKPS",
-   "AOOTTW", "CIMOTU", "DEILRX", "DELRVY",
-   "DISTTY", "EEGHNW", "EEINSU", "EHRTVW",
-   "EIOSST", "ELRTTY", "HIMNQU", "HLNNRZ"
-};
 
-Boggle::Boggle() {
-	Board* board = new Board();
-	board->changeCubeSides(DEFAULT_CUBES); //standard config
+Boggle::Boggle() {}
+
+void Boggle::setDefaultBoard() {
+	board = Board();
+	board.setDefault();
 }
 
-Boggle::~Boggle() {
-	delete board;
-}
-
-void Boggle::shuffleBoard() {
-	board->shuffleBoard();
-}
-
-void Boggle::insertCustomCubes(const std::string* sides) {
-	board->changeCubeSides(sides);
+void Boggle::insertCustomCubes(const std::vector<string>& sides) {
+	board = Board();
+	board.setCubeSides(sides);
 }
 
 std::string Boggle::boardToString() const {
-	return board->toString();
+	return board.toString();
 }
-

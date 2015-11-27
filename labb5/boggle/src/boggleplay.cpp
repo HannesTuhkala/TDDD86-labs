@@ -1,7 +1,3 @@
-// You will edit and turn in this CPP file.
-// Also remove these comments here and add your own.
-// TODO: remove this comment header and replace with your own
-
 #include <cstdlib>
 #include <iostream>
 #include <iomanip>
@@ -18,7 +14,7 @@ static const int NUM_CUBES = 16;
 void clearConsole();
 void playOneGame(Boggle& boggle);
 void inputCustomSides(Boggle& boggle);
-std::string* createSides(std::string ans);
+std::vector<string> createSides(std::string& ans);
 bool isAlpha(std::string& text);
 bool randomBoard();
 
@@ -26,18 +22,12 @@ bool randomBoard();
  * Plays one game of Boggle using the given boggle game state object.
  */
 void playOneGame(Boggle& boggle) {
-//	Board* board = new Board();
-//	std::cout << board->toString() << std::endl;
-//	std::cout << "Enter random character: ";
-//	char c;
-//	std::cin >> c;
-//	std::cout << board->isNeighbor(3, 3, c) << std::endl;
-//	delete board;
 	if (randomBoard()) {
-		boggle.shuffleBoard();
+		boggle.setDefaultBoard();
 	} else {
 		inputCustomSides(boggle);
 	}
+	// TODO not done yet
 }
 
 void inputCustomSides(Boggle& boggle) {
@@ -54,15 +44,14 @@ void inputCustomSides(Boggle& boggle) {
 		} else break;
 	}
 	ans = toUpperCase(ans);
-	//std::string* sides = createSides(ans);
-	//boggle.insertCustomCubes(sides);
+	boggle.insertCustomCubes(createSides(ans));
 }
 
-std::string* createSides(std::string ans) {
-	std::string sides[NUM_CUBES];
-	for (int i = 0; i < NUM_CUBES; ++i) {
-		sides[i].push_back(ans[i]);
-		sides[i] += "AAAAA"; //doesn't really matter which characters you append
+std::vector<string> createSides(std::string& ans) {
+	std::vector<string> sides;
+	sides.resize(NUM_CUBES);
+	for (unsigned int i = 0; i < NUM_CUBES; ++i) {
+		sides[i] = ans[i]; 
 	}
 	return sides;
 }
