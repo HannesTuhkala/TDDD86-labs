@@ -28,6 +28,7 @@ void playOneGame(Boggle& boggle) {
 		inputCustomSides(boggle);
 	}
 	// TODO not done yet
+	// jag gillar glass
 }
 
 void inputCustomSides(Boggle& boggle) {
