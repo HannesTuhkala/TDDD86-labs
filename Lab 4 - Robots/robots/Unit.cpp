@@ -8,6 +8,7 @@
 #include "utilities.h"
 #include <cstdlib>
 #include <cmath>
+#include <QGraphicsScene>
 
 Unit::Unit() {
     teleport();
@@ -22,6 +23,8 @@ Unit::Unit(const Point& p) {
     x = p.x;
     y = p.y;
 }
+
+void Unit::draw(QGraphicsScene* scene) const {}
 
 Point Unit::asPoint() const {
     return Point{x, y};

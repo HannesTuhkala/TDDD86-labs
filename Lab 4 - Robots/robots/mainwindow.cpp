@@ -9,9 +9,11 @@
 #include "Hero.h"
 #include "Robot.h"
 #include "Junk.h"
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent) {
+
     // set default size and color
     scene = new QGraphicsScene(0, 0, SCENE_WIDTH, SCENE_HEIGHT);
     scene->setBackgroundBrush(QBrush(QColor(204, 192, 179)));
@@ -79,36 +81,41 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
         bool actionTaken = false;
         bool waiting = false;
 
-        if (e->modifiers() != Qt::KeypadModifier) {
+        if (e->modifiers() == Qt::KeypadModifier) {
             switch (e->key()) {
-            case Qt::Key_Less:
+            case Qt::Key_1:
                 actionTaken = tryMove(hero, Point{pt.x - 1, pt.y + 1});
                 break;
-            case Qt::Key_S:
+            case Qt::Key_2:
                 actionTaken = tryMove(hero, Point{pt.x, pt.y + 1});
                 break;
-            case Qt::Key_C:
+            case Qt::Key_3:
                 actionTaken = tryMove(hero, Point{pt.x + 1, pt.y + 1});
                 break;
-            case Qt::Key_A:
+            case Qt::Key_4:
                 actionTaken = tryMove(hero, Point{pt.x - 1, pt.y});
                 break;
-            case Qt::Key_D:
+            case Qt::Key_6:
                 actionTaken = tryMove(hero, Point{pt.x + 1, pt.y});
                 break;
-            case Qt::Key_Q:
+            case Qt::Key_7:
                 actionTaken = tryMove(hero, Point{pt.x - 1, pt.y - 1});
                 break;
-            case Qt::Key_W:
+            case Qt::Key_8:
                 actionTaken = tryMove(hero, Point{pt.x, pt.y - 1});
                 break;
-            case Qt::Key_E:
+            case Qt::Key_9:
                 actionTaken = tryMove(hero, Point{pt.x + 1, pt.y - 1});
                 break;
-            case Qt::Key_Space:
+            case Qt::Key_5:
                 actionTaken = true;
                 waiting = true;
                 break;
+            default:
+                QWidget::keyPressEvent(e);
+            }
+        } else {
+            switch (e->key()) {
             case Qt::Key_T:
                 gameState.teleportHero();
                 actionTaken = true;
