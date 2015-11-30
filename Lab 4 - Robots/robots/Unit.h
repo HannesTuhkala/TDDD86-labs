@@ -7,6 +7,7 @@
 #define UNIT_H
 
 #include "utilities.h"
+#include <QGraphicsScene>
 
 /* Root class for all pieces on the board.
  * Subclasses are Robot, Hero and Junk.
@@ -22,7 +23,7 @@ public:
     */
     Point asPoint() const;
 
-	virtual void draw() const;
+	virtual void draw(QGraphicsScene* scene) const;
 
     /*
     * Am I in the same square as u?
