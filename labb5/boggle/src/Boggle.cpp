@@ -24,3 +24,19 @@ void Boggle::insertCustomCubes(const std::vector<string>& sides) {
 std::string Boggle::boardToString() const {
 	return board.toString();
 }
+
+bool Boggle::isValidWord(const Lexicon& dict, string word) const {
+//	int size = board.BOARD_SIZE;
+//	for (int r = 0; r < size; ++r) {
+//		for (int c = 0; c < size; ++c) {
+//			Cube curr = board.cubeAt(r, c);
+//			curr.setVisited(true);
+//			vector<Cube> neighbors = board.getNeighbors(r, c);
+//			for (Cube neighbor : neighbors) {
+//				
+//			}
+//		}
+//	}
+	// du måste kolla alla grannar till c, markera den som besökt, rekursivt
+	// anropa alla som inte är besökta och anda resultatet. typ
+}

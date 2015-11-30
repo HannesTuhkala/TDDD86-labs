@@ -11,6 +11,7 @@
 #include <vector>
 #include "Board.h"
 #include "Cube.h"
+#include "lexicon.h"
 
 using namespace std;
 
@@ -30,6 +31,11 @@ public:
 	Sets the board to custom cube sides.
 	*/
 	void insertCustomCubes(const vector<string>& sides);
+	/*
+	Checks if a given word could be made from the board. The given word must
+	be all alpha characters and exactly 4 chars long.
+	*/
+	bool isValidWord(const Lexicon& dict, string word) const;
 
 	string boardToString() const;
 

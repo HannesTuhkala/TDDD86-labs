@@ -2,7 +2,6 @@
 #include "shuffle.h"
 
 static const int NUM_CUBES = 16;   // the number of cubes in the game
-static const int BOARD_SIZE = 4;
 static const std::string DEFAULT_CUBES[NUM_CUBES] = {        // the letters on all 6 sides of every cube
    "AAEEGN", "ABBJOO", "ACHOPS", "AFFKPS",
    "AOOTTW", "CIMOTU", "DEILRX", "DELRVY",
@@ -57,7 +56,7 @@ std::string Board::toString() const {
 }
 
 bool Board::isNeighbor(int row, int col, char c) const {
-	vector<pair<int, int>> indices(row * col);
+	std::vector<std::pair<int, int>> indices(row * col);
 	for (int r = row - 1; r <= row + 1; ++r) {
 		for (int c = col - 1; c <= col + 1; ++c) {
 			if (cubes.inBounds(r, c)) {
@@ -69,5 +68,21 @@ bool Board::isNeighbor(int row, int col, char c) const {
 		if (cubes[index.first][index.second].sideUp() == c) return true;
 	}
 	return false;
+}
+
+Cube Board::cubeAt(const unsigned int row, const unsigned int col) const {
+	return cubes[row][col];
+}
+
+std::vector<Cube> getNeighbors(int row, int col) const {
+	std::vector<Cube> result;
+	for (int r = row - 1; r <= row + 1; ++r) {
+		for (int c = col - 1; c <= col + 1; ++c) {
+			if (cubes.inBounds(r, c)) {
+				result.push_back(cubes[r][c]);
+			}
+		}
+	}
+	return result;
 }
 

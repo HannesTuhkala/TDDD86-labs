@@ -27,12 +27,19 @@ class Board {
 	Gets a string representation of the board.
 	*/
 	std::string toString() const;
+
+	Cube cubeAt(const unsigned int row, const unsigned int col) const;
+
+	std::vector<Cube> getNeighbors(int row, int col) const;
+
+	static const int BOARD_SIZE = 4;
+
+	private:
 	/*
 	Checks whether the char given is a neighbor to the given index, or if it is
 	equal to the char of the given index.
 	*/
 	bool isNeighbor(int row, int col, char c) const;
-	private:
 	/*
 	Shuffles the board.
 	*/

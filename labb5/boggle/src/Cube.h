@@ -24,6 +24,12 @@ class Cube {
 	Sets a custom index to be the side facing up.
 	*/
 	void setSideUp(const unsigned int index);
+	/*
+	Sets visit status.
+	*/
+	void setVisited(const bool aFlag);
+
+	bool isVisited() const;
 
 	private:
 	/*
@@ -34,6 +40,10 @@ class Cube {
 	The index of the side that is up.
 	*/
 	int sideUpIndex;
+	/*
+	Whether cube has been visited by backtracking algorithm. Default is false.
+	*/
+	bool visited;
 	/*
 	The number of sides.
 	*/

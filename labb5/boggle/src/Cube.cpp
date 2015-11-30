@@ -6,6 +6,7 @@ Cube::Cube() {}
 Cube::Cube(std::string sides) {
 	this->sides = sides;
 	sideUpIndex = 0;
+	visited = false;
 }
 
 void Cube::shuffle() {
@@ -18,4 +19,12 @@ char Cube::sideUp() const {
 
 void Cube::setSideUp(const unsigned int index) {
 	sideUpIndex = index;
+}
+
+void Cube::setVisited(const bool aFlag) {
+	visited = aFlag;
+}
+
+bool Cube::isVisited() const {
+	return visited;
 }
