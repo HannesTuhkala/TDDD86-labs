@@ -1,14 +1,11 @@
-// This is the CPP file you will edit and turn in.
-// Also remove these comments here and add your own, along with
-// comments on every function and on complex code sections.
-// TODO: remove this comment header
-
 #include "encoding.h"
 // TODO: include any other headers you need
 
 map<int, int> buildFrequencyTable(istream& input) {
-    // TODO: implement this function
     map<int, int> freqTable;
+
+
+
     return freqTable;
 }
 
