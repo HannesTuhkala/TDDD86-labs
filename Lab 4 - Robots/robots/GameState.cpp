@@ -43,10 +43,12 @@ int GameState::countCollisions() {
     int numberDestroyed = 0;
     unsigned int i = 0;
     while (i < robots.size()) {
+        bool hitJunk = robots[i]->isJunk();
         bool collision = (countRobotsAt(*robots[i]) > 1);
-        if (collision) {
-            Robot* temp = new Junk((*robots[i]));
-            robots[i] = dynamic_cast<Junk*>(temp);
+        if (collision && !hitJunk) {
+            Robot* temp = robots[i];
+            robots[i] = new Junk((*robots[i]));
+            delete temp;
             numberDestroyed++;
         } else {
             i++;
@@ -56,7 +58,14 @@ int GameState::countCollisions() {
 }
 
 bool GameState::anyRobotsLeft() const {
-    return (robots.size() != 0);
+    for (Robot* robot : robots) {
+        if (!robot->isJunk()) {
+            return !robot->isJunk();
+        }
+    }
+
+    // test
+    return false;
 }
 
 bool GameState::heroDead() const {
