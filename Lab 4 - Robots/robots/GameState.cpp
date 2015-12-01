@@ -13,12 +13,46 @@ GameState::GameState(){}
 
 GameState::GameState(int numberOfRobots) {
     for (int i = 0; i < numberOfRobots; i++) {
-        Robot* robot;
-        do {robot = new Robot();}
-        while (!isEmpty (*robot) && robot->isJunk());
+        Robot* robot = new Robot();
+        while (!isEmpty(*robot) && robot->isJunk()) {
+            delete robot;
+            robot = new Robot();
+        }
+
         robots.push_back(robot);
     }
     teleportHero();
+}
+
+GameState::~GameState() {
+    for (Robot* robot : robots) {
+        delete robot;
+    }
+
+    robots.clear();
+}
+
+GameState::GameState(const GameState& gs) {
+    *this = gs;
+}
+
+GameState& GameState::operator=(const GameState& gs) {
+    if (this != &gs) {
+        this->hero = gs.hero;
+
+        for (Robot* robot : robots) {
+            delete robot;
+        }
+
+        robots.clear();
+
+        for (Robot* robot : gs.robots) {
+            Robot* temp = new Robot(*robot);
+            this->robots.push_back(temp);
+        }
+    }
+
+    return *this;
 }
 
 void GameState::draw(QGraphicsScene *scene) const {
@@ -60,11 +94,10 @@ int GameState::countCollisions() {
 bool GameState::anyRobotsLeft() const {
     for (Robot* robot : robots) {
         if (!robot->isJunk()) {
-            return !robot->isJunk();
+            return true;
         }
     }
 
-    // test
     return false;
 }
 
