@@ -39,4 +39,7 @@ bool Boggle::isValidWord(const Lexicon& dict, string word) const {
 //	}
 	// du måste kolla alla grannar till c, markera den som besökt, rekursivt
 	// anropa alla som inte är besökta och anda resultatet. typ
+	//TODO implementera detta
+	//skiten kompilerar iaf.
+	return false;
 }

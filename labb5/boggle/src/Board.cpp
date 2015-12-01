@@ -74,7 +74,7 @@ Cube Board::cubeAt(const unsigned int row, const unsigned int col) const {
 	return cubes[row][col];
 }
 
-std::vector<Cube> getNeighbors(int row, int col) const {
+std::vector<Cube> Board::getNeighbors(int row, int col) const {
 	std::vector<Cube> result;
 	for (int r = row - 1; r <= row + 1; ++r) {
 		for (int c = col - 1; c <= col + 1; ++c) {

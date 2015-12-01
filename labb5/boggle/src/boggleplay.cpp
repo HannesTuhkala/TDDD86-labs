@@ -35,7 +35,8 @@ void playOneGame(Boggle& boggle) {
 	}
 	vector<string> words;
 	unsigned int score = 0;
-	Lexicon dictionary("EnglishWords.dat");
+	//TODO detta funkar inte i linux
+	Lexicon dictionary("/Users/Malcolm/Google Drive/C++/Cplusplus-Labs/labb5/boggle/res/EnglishWords.dat");
 	while (true) {
 		printWords(words);
 		printScore(score);
@@ -60,7 +61,7 @@ string enterWord(Boggle& boggle, Lexicon& dictionary, vector<string>& words) {
 			cout << "Please type a valid English word:";
 		} else if (isAlreadyUsed(words, word)) {
 			cout << "Please type a word that has not already been used:";
-		} else if (/*om strängen inte går att bilda*/) {
+		} else if (false/*om strängen inte går att bilda*/) {
 			cout << "Please type a word that has not already been used:";
 		} else {
 			return word;
