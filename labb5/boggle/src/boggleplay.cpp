@@ -33,10 +33,10 @@ void playOneGame(Boggle& boggle) {
 	} else {
 		inputCustomSides(boggle);
 	}
+	Lexicon dictionary("EnglishWords.dat");
 	vector<string> words;
 	unsigned int score = 0;
-	//TODO detta funkar inte i linux
-	Lexicon dictionary("/Users/Malcolm/Google Drive/C++/Cplusplus-Labs/labb5/boggle/res/EnglishWords.dat");
+	cout << "It's your turn!" << endl;
 	while (true) {
 		printWords(words);
 		printScore(score);
@@ -46,6 +46,7 @@ void playOneGame(Boggle& boggle) {
 		cout << "You found a new word! \"" << temp << "\"" << endl;
 	}
 }
+
 
 string enterWord(Boggle& boggle, Lexicon& dictionary, vector<string>& words) {
 	cout << "Type a word (or press Enter to end your turn): ";
@@ -85,18 +86,28 @@ void printScore(unsigned int score) {
 }
 
 void printWords(vector<string>& words) {
-	string w;
+	//string w;
+	//int size = words.size();
+	//for (int i = 0; i < size - 1; ++i) {
+	//	w += "\"";
+	//	w += words[i];
+	//	w += "\", ";
+	//}
+	//w += "\"";
+	//w += words.back();
+	//w += "\"";
+	//cout << "Your words (" << size << "): {"
+	//<< w << "}" << endl;
 	int size = words.size();
+	cout << "Your words: (" << size << "): {";
 	for (int i = 0; i < size - 1; ++i) {
-		w += "\"";
-		w += words[i];
-		w += "\", ";
+		cout << "\"" << words[i] << "\", ";
 	}
-	w += "\"";
-	w += words.back();
-	w += "\"";
-	cout << "Your words (" << size << "): {"
-	<< w << "}" << endl;;
+	if (size != 0) {
+		cout << "\"" << words.back() << "\"}" << endl;
+	} else {
+		cout << "}" << endl;
+	}
 }
 
 void inputCustomSides(Boggle& boggle) {
