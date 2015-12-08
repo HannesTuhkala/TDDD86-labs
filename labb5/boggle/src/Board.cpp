@@ -20,7 +20,7 @@ void Board::shuffleBoard() {
 	shuffle(cubes); 
 }
 
-void Board::setCubeSides(const std::vector<string>& sides) {
+void Board::setCubeSides(const std::vector<std::string>& sides) {
 	cubes = Grid<Cube>(BOARD_SIZE, BOARD_SIZE);
 	unsigned int sideIndex = 0;
 	for (unsigned int i = 0; i < BOARD_SIZE; ++i) {
@@ -70,23 +70,46 @@ bool Board::isNeighbor(int row, int col, char c) const {
 	return false;
 }
 
-Cube Board::cubeAt(const unsigned int row, const unsigned int col) const {
-	return cubes[row][col];
+void Board::setVisited(const int row, const int col, const bool aFlag) {
+	cubes[row][col].setVisited(aFlag);
 }
 
-std::vector<Cube> Board::getNeighbors(int row, int col) const {
-	std::vector<Cube> result;
+bool Board::isVisited(const int row, const int col) const {
+	return cubes[row][col].isVisited();
+}
+
+char Board::cubeSideAt(const unsigned int row, const unsigned int col) const {
+	return cubes[row][col].sideUp();
+}
+
+std::vector<std::pair<int,int>> Board::getNeighbors(int row, int col) const {
+	std::vector<std::pair<int,int>> indices;
 	for (int r = row - 1; r <= row + 1; ++r) {
 		for (int c = col - 1; c <= col + 1; ++c) {
 			if (cubes.inBounds(r, c)) {
-				result.push_back(cubes[r][c]);
+				indices.push_back(std::pair<int,int>(r,c));
 			}
 		}
 	}
-	return result;
+	return indices;
 }
 
-vector<pair<int><int>> getPossibleNeighbors(char c,
-											pair<int><int> curr) const {
-	
+std::vector<std::pair<int, int>> Board::getPossibleStartingPoints(char c) const {
+	std::vector<std::pair<int,int>> indices;
+	for (int i = 0; i < BOARD_SIZE; ++i) {
+		for (int j = 0; j < BOARD_SIZE; ++j) {
+			if (cubes[i][j].sideUp() == c) indices.push_back(pair<int,int>(i,j));
+		}
+	}
+	return indices;
+}
+
+std::vector<std::pair<int,int>> Board::getAllStartingPoints() const {
+	std::vector<std::pair<int,int>> indices;
+	for (int i = 0; i < BOARD_SIZE; ++i) {
+		for (int j = 0; j < BOARD_SIZE; ++j) {
+			indices.push_back(pair<int,int>(i,j));
+		}
+	}
+	return indices;
 }
