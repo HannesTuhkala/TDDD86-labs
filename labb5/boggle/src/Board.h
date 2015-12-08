@@ -29,8 +29,12 @@ class Board {
 	std::string toString() const;
 
 	Cube cubeAt(const unsigned int row, const unsigned int col) const;
-
+	/*
+	TODO Onödig?
+	*/
 	std::vector<Cube> getNeighbors(int row, int col) const;
+	//ändra så den tar in int r, int c? Behövs en char också?
+	vector<pair<int><int>> getPossibleNeighbors(char c, pair<int><int> curr) const;
 
 	static const int BOARD_SIZE = 4;
 
@@ -48,6 +52,7 @@ class Board {
 	The cubes
 	*/
 	Grid<Cube> cubes;
+
 };
 
 

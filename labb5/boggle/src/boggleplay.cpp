@@ -57,7 +57,7 @@ string enterWord(Boggle& boggle, Lexicon& dictionary, vector<string>& words) {
 		if (word.empty()) {
 			return "";
 		} else if (!isCorrectFormat(word)) {
-			cout << "Please type a word with 4 alpha characters: ";
+			cout << "Please type a word with at least 4 alpha characters: ";
 		} else if (!dictionary.contains(word)) {
 			cout << "Please type a valid English word:";
 		} else if (isAlreadyUsed(words, word)) {
@@ -78,7 +78,7 @@ bool isAlreadyUsed(vector<string>& words, string word) {
 }
 
 bool isCorrectFormat(string word) {
-	return isAlpha(word) && word.size() == 4;
+	return isAlpha(word) && word.size() >= 4;
 }
 
 void printScore(unsigned int score) {

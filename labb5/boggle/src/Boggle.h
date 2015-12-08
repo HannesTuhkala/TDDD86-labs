@@ -41,6 +41,10 @@ public:
 
 private:
 	Board board;
+	
+	bool checkValidWordHelp(const Lexicon& dict,
+							string word,
+							const char curr) const;
 };
 
 #endif
