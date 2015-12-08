@@ -86,3 +86,7 @@ std::vector<Cube> Board::getNeighbors(int row, int col) const {
 	return result;
 }
 
+vector<pair<int><int>> getPossibleNeighbors(char c,
+											pair<int><int> curr) const {
+	
+}

@@ -28,7 +28,9 @@ class Cube {
 	Sets visit status.
 	*/
 	void setVisited(const bool aFlag);
-
+	/*
+	Returns visit status
+	*/
 	bool isVisited() const;
 
 	private:
@@ -48,6 +50,7 @@ class Cube {
 	The number of sides.
 	*/
 	static const int SIDES = 6;
+	
 };
 
 #endif

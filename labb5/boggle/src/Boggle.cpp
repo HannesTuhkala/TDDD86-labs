@@ -41,5 +41,17 @@ bool Boggle::isValidWord(const Lexicon& dict, string word) const {
 	// anropa alla som inte är besökta och anda resultatet. typ
 	//TODO implementera detta
 	//skiten kompilerar iaf.
-	return false;
+	//jag måste nog kolla baklänges NEJ!
+	return checkValidWordHelp(dict, word, pair<int><int>(0,0));
 }
+
+//nej, du måste kolla från början av ordet till slutet, eftersom du måste
+//kontrollera den mot lexiconet
+//använd en stack för varje bokstav?
+bool Boggle::checkValidWordHelp(const Lexicon& dict,
+								string word,
+								const pair<int><int> curr) const {
+	if (word.empty()) return true;
+	
+}
+
