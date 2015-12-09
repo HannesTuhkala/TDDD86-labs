@@ -13,6 +13,8 @@ bool alreadyExists(const vector<string>& words, const string& word);
 
 Boggle::Boggle() {
 	Lexicon dictionary(DICTIONARY_FILE);
+	userScore = 0;
+	computerScore = 0;
 }
 
 void Boggle::addUserWord(const string& word) {
@@ -51,7 +53,7 @@ bool Boggle::isCorrectFormat(const string& word) const {
 }
 
 //TODO kolla om det går att const-deklarera den här
-vector<string> Boggle::getAllPossibleWords(const Lexicon& dictionary, const vector<string>& takenWords) {
+vector<string> Boggle::getAllRemainingWords() {
 	vector<string> foundWords;
 	//since the backtracking algorithm needs more parameters for the recursion
 	//to work, a help function is made to start at every character in the board.
@@ -59,16 +61,14 @@ vector<string> Boggle::getAllPossibleWords(const Lexicon& dictionary, const vect
 	for (pair<int,int> startingPoint : startingPoints) {
 		string startingWord = "";
 		startingWord += board.cubeSideAt(startingPoint.first, startingPoint.second);
-		getAllPossibleWordsHelp(dictionary, startingWord, startingPoint, foundWords, takenWords);
+		getAllRemainingWordsHelp(startingWord, startingPoint, foundWords);
 	}
 	return foundWords;
 }
 
-void Boggle::getAllPossibleWordsHelp(const Lexicon& dictionary,
-									const string& currentWord,
+void Boggle::getAllRemainingWordsHelp(const string& currentWord,
 									const pair<int,int>& currentIndex,
-									vector<string>& foundWords, 
-									const vector<string>& takenWords) {
+									vector<string>& foundWords) {
 	//if there are words in the dictionary that contain the current word...
 	if (dictionary.containsPrefix(currentWord)) {
 		//...and if the current word is a complete word in the dictionary 
@@ -76,7 +76,7 @@ void Boggle::getAllPossibleWordsHelp(const Lexicon& dictionary,
 		//taken by the user...
 		if (currentWord.size() >= 4
 				&& !alreadyExists(foundWords, currentWord) 
-				&& !alreadyExists(takenWords, currentWord) 
+				&& !alreadyExists(userWords, currentWord) 
 				&& dictionary.contains(currentWord)) {
 			//We found a word! Push it to the words.
 			foundWords.push_back(currentWord);
@@ -99,7 +99,7 @@ void Boggle::getAllPossibleWordsHelp(const Lexicon& dictionary,
 				newWord += board.cubeSideAt(neighRow, neighCol);
 				//explore all words that could have the currentword + the neighbor
 				//character as prefixes. 
-				getAllPossibleWordsHelp(dictionary, newWord, neighbor, foundWords, takenWords);
+				getAllRemainingWordsHelp(newWord, neighbor, foundWords);
 			}
 		}
 		//after we've checked all the words that could be made with the currentword as prefix,
@@ -139,17 +139,31 @@ bool Boggle::checkValidWordHelp(string word, pair<int,int> currIndex) {
 			}
 			//if the word with the neighbor wasnt valid, then check the next neighbor
 		}
-		//if no neighbor took the word on a valid path, then the word is invalid. Unmark cube as visited and 
+		//if no neighbor took the word on a valid path,
+		//then the word is invalid. Unmark cube as visited and 
 		//return false.
 		board.setVisited(currRow, currCol, false);
 		return false;
-		//if the first character doesn't match the current character, or if it has already been visited,
+		//if the first character doesn't match the current character,
+		//or if it has already been visited,
 		//the word can't be valid. Return false.
 	} else return false;
 }
 
 bool Boggle::isAlreadyUsed(const string& word) const {
 	return alreadyExists(userWords, word);
+}
+
+vector<string> Boggle::playComputerTurn() {
+	vector<string> computerWords = getAllRemainingWords();
+	for (string word : computerWords) {
+		computerScore += word.size() - MIN_WORD_LENGTH + 1;
+	}
+	return computerWords;
+}
+
+void Boggle::addUserScore(unsigned int score) {
+	userScore += score;
 }
 
 bool alreadyExists(const vector<string>& words, const string& word) {
@@ -164,4 +178,20 @@ bool Boggle::isAlpha(const string& text) const {
 		if (!isalpha(c)) return false;
 	}
 	return true;
+}
+
+vector<string> Boggle::getComputerWords() const {
+	return computerWords;
+}
+
+vector<string> Boggle::getUserWords() const {
+	return userWords;
+}
+
+unsigned int Boggle::getComputerScore() const {
+	return computerScore;
+}
+
+unsigned int Boggle::getUserScore() const {
+	return userScore;
 }

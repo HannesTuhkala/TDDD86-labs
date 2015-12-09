@@ -56,5 +56,5 @@ QMAKE_EXTRA_TARGETS += copyResources
 POST_TARGETDEPS += copyResources
 
 macx {
-    cache()
+#    cache()
 }

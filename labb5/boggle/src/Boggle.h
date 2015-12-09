@@ -40,10 +40,6 @@ public:
 	be all alpha characters and atleast 4 chars long.
 	*/
 	bool isValidWord(const string word);
-	/*
-	 * Uses backtracking algorithm to find all possible valid English words in the board.
-	 */
-	vector<string> getAllPossibleWords(const Lexicon& dictionary, const vector<string>& takenWords);
 
 	bool isValidEnglishWord(const string& word) const;
 
@@ -55,24 +51,42 @@ public:
 
 	bool isAlreadyUsed(const string& word) const;
 
+	void addUserScore(unsigned int score);
+
+	vector<string> playComputerTurn();
+
+	vector<string> getComputerWords() const;
+
+	unsigned int getComputerScore() const;
+
+	vector<string> getUserWords() const;
+	
+	unsigned int getUserScore() const;
+
 private:
+
 	Board board;
 
 	Lexicon dictionary;
 
 	vector<string> userWords;
 
+	vector<string> computerWords;
+
 	unsigned int userScore;
+
+	unsigned int computerScore;
 	
 	bool checkValidWordHelp(string word, pair<int,int> currIndex);
 
-	void getAllPossibleWordsHelp(const Lexicon& dictionary,
-									const string& currentWord,
-									const pair<int,int>& currentIndex,
-									vector<string>& foundWords,
-									const vector<string>& takenWords);
+	void getAllRemainingWordsHelp(const string& currentWord,
+								const pair<int,int>& currentIndex,
+								vector<string>& foundWords);
+	/*
+	 * Uses backtracking algorithm to find all possible valid English words in the board.
+	 */
+	vector<string> getAllRemainingWords();
 
-//	bool alreadyExists(const vector<string>& words, const string& word) const;
 };
 
 #endif

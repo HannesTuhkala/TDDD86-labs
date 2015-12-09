@@ -15,10 +15,10 @@ static const int NUM_CUBES = 16;
 void clearConsole();
 void playOneGame(Boggle& boggle);
 void inputCustomSides(Boggle& boggle);
-void printWords(vector<string>& words, bool computer);
-void updateScore(string& word, unsigned int& score);
+void printWords(Boggle& boggle, bool computer);
+void updateScore(string& word, Boggle& boggle);
 vector<string> createSides(string& ans);
-void enterWord(Boggle& boggle, vector<string>& words);
+void enterWord(Boggle& boggle);
 void printScore(unsigned int score);
 bool randomBoard();
 unsigned int countComputerScore(vector<string> words);
@@ -32,63 +32,60 @@ void playOneGame(Boggle& boggle) {
 	} else {
 		inputCustomSides(boggle);
 	}
-	vector<string> words;
-	unsigned int score = 0;
 	cout << "It's your turn!" << endl;
 	cout << boggle.boardToString() << endl;
 	cin.ignore();
-	while (true) {
-		printWords(words, false);
-		printScore(score);
-		enterWord(boggle, words);
-		if (temp.empty()) break;
-		words.push_back(temp);
-		updateScore(temp, score);
-		cout << "You found a new word! \"" << temp << "\"" << endl;
-	}
+	enterWord(boggle);
 	//computer's turn
 	cout << "It's my turn!" << endl;
-	vector<string> allWords = boggle.getAllPossibleWords(dictionary, words);
-	printWords(allWords, true);
-	unsigned int computerScore = countComputerScore(allWords);
+	vector<string> computerWords = boggle.playComputerTurn();
+	printWords(boggle, true);
+	unsigned int computerScore = boggle.getComputerScore();
+	unsigned int userScore = boggle.getUserScore();
 	cout << "My score: " << computerScore << endl;
-	if (computerScore > score) {
+	if (computerScore > userScore) {
 		cout << "Ha ha ha, I destroyed you. Better luck next time, puny human!" << endl;
+	} else if (computerScore == userScore) {
+		cout << "It's a tie!" << endl;
 	} else {
-		cout << "Wow, we both found the same number of words...how???" << endl;
+		cout << "Holy crap! You actually won over me! Congrats!" << endl;
 	}
 }
 
-unsigned int countComputerScore(vector<string> words) {
-	unsigned int score = 0;
-	for (string word : words) {
-		updateScore(word, score);
-	}
-	return score;
+//unsigned int countComputerScore(vector<string> words) {
+//	unsigned int score = 0;
+//	for (string word : words) {
+//		updateScore(word, boggle);
+//	}
+//	return score;
+//}
+
+void updateScore(string& word, Boggle& boggle) {
+	boggle.addUserScore(word.size() - 3);
 }
 
-void updateScore(string& word, unsigned int& score) {
-	score += word.size() - 3;
-}
-
-void enterWord(Boggle& boggle, vector<string>& words) {
-	cout << "Type a word (or press Enter to end your turn): ";
-	string word;
+void enterWord(Boggle& boggle) {
 	while (true) {
+		printWords(boggle, false);
+		printScore(boggle.getUserScore());
+		cout << "Type a word (or press Enter to end your turn): ";
+		string word;
 		getline(cin, word);
 		word = toUpperCase(word);
 		if (word.empty()) {
 			return;
 		} else if (!boggle.isCorrectFormat(word)) {
-			cout << "Please type a word with at least 4 alpha characters: ";
+			cout << "Please type a word with at least 4 alpha characters." << endl;
 		} else if (!boggle.isValidEnglishWord(word)) {
-			cout << "Please type a valid English word: ";
-		} else if (isAlreadyUsed(words, word)) {
-			cout << "Please type a word that has not already been used: ";
+			cout << "Please type a valid English word." << endl;
+		} else if (boggle.isAlreadyUsed(word)) {
+			cout << "Please type a word that has not already been used." << endl;
 		} else if (!boggle.isValidWord(word)) {
-			cout << "Please type a word that can be made from the cubes: ";
+			cout << "Please type a word that can be made from the cubes." << endl;
 		} else {
 			boggle.addUserWord(word);
+			cout << "You found a new word! \"" << word << "\"" << endl;
+			updateScore(word, boggle);
 		}
 	}
 }
@@ -97,10 +94,17 @@ void printScore(unsigned int score) {
 	cout << "Your score: " << score << endl;
 }
 
-void printWords(vector<string>& words, bool computer) {
+void printWords(Boggle& boggle, bool computer) {
 	string fw;
-	if (computer) fw = "My";
-	else fw = "Your";
+	vector<string> words;
+	if (computer) {
+		fw = "My";
+		words = boggle.getComputerWords();
+	}
+	else { 
+		fw = "Your";
+		words = boggle.getComputerWords();
+	}
 	int size = words.size();
 	cout << fw << " words (" << size << "): {";
 	for (int i = 0; i < size - 1; ++i) {
