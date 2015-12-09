@@ -16,7 +16,6 @@ void clearConsole();
 void playOneGame(Boggle& boggle);
 void inputCustomSides(Boggle& boggle);
 void printWords(Boggle& boggle, bool computer);
-void updateScore(string& word, Boggle& boggle);
 vector<string> createSides(string& ans);
 void enterWord(Boggle& boggle);
 void printScore(unsigned int score);
@@ -27,22 +26,26 @@ unsigned int countComputerScore(vector<string> words);
  * Plays one game of Boggle using the given boggle game state object.
  */
 void playOneGame(Boggle& boggle) {
+	clearConsole();
+	boggle.reset();
 	if (randomBoard()) {
 		boggle.setDefaultBoard();
 	} else {
 		inputCustomSides(boggle);
 	}
+	clearConsole();
 	cout << "It's your turn!" << endl;
-	cout << boggle.boardToString() << endl;
 	cin.ignore();
 	enterWord(boggle);
 	//computer's turn
 	cout << "It's my turn!" << endl;
-	vector<string> computerWords = boggle.playComputerTurn();
+	boggle.playComputerTurn();
+	cout << boggle.boardToString() << endl;
 	printWords(boggle, true);
 	unsigned int computerScore = boggle.getComputerScore();
 	unsigned int userScore = boggle.getUserScore();
 	cout << "My score: " << computerScore << endl;
+	cout << "Your score: " << userScore << endl;
 	if (computerScore > userScore) {
 		cout << "Ha ha ha, I destroyed you. Better luck next time, puny human!" << endl;
 	} else if (computerScore == userScore) {
@@ -52,25 +55,15 @@ void playOneGame(Boggle& boggle) {
 	}
 }
 
-//unsigned int countComputerScore(vector<string> words) {
-//	unsigned int score = 0;
-//	for (string word : words) {
-//		updateScore(word, boggle);
-//	}
-//	return score;
-//}
-
-void updateScore(string& word, Boggle& boggle) {
-	boggle.addUserScore(word.size() - 3);
-}
-
 void enterWord(Boggle& boggle) {
 	while (true) {
+		cout << boggle.boardToString() << endl;
 		printWords(boggle, false);
 		printScore(boggle.getUserScore());
 		cout << "Type a word (or press Enter to end your turn): ";
 		string word;
 		getline(cin, word);
+		clearConsole();
 		word = toUpperCase(word);
 		if (word.empty()) {
 			return;
@@ -85,7 +78,6 @@ void enterWord(Boggle& boggle) {
 		} else {
 			boggle.addUserWord(word);
 			cout << "You found a new word! \"" << word << "\"" << endl;
-			updateScore(word, boggle);
 		}
 	}
 }
@@ -103,7 +95,7 @@ void printWords(Boggle& boggle, bool computer) {
 	}
 	else { 
 		fw = "Your";
-		words = boggle.getComputerWords();
+		words = boggle.getUserWords();
 	}
 	int size = words.size();
 	cout << fw << " words (" << size << "): {";

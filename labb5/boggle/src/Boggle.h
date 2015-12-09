@@ -25,7 +25,13 @@ public:
 	Constructs a Boggle object with a standard Board configuration.
 	*/
 	Boggle();
-	
+	/*
+	 * Resets the game, but does not reload the dictionary.
+	 */
+	void reset();
+	/*
+	 * Adds a valid user word to the list of user words.
+	 */
 	void addUserWord(const string& word);
 	/*
 	Sets the board to the default cube sides
@@ -40,27 +46,46 @@ public:
 	be all alpha characters and atleast 4 chars long.
 	*/
 	bool isValidWord(const string word);
-
+	/*
+	 * Checks if the given word is contained within the dictionary.
+	 */
 	bool isValidEnglishWord(const string& word) const;
-
+	/*
+	 * Checks whether a word has the correct format for the Boggle-rules.
+	 */
 	bool isCorrectFormat(const string& word) const;
-
+	/*
+	 * Returns a string representation of the board.
+	 */
 	string boardToString() const;
-	
+	/*
+	 * Returns whether a string has only alpha-characters.
+	 */
 	bool isAlpha(const string& text) const;
-
+	/*
+	 * Returns whether the word entered has already been entered by the user.
+	 */
 	bool isAlreadyUsed(const string& word) const;
-
-	void addUserScore(unsigned int score);
-
-	vector<string> playComputerTurn();
-
+	/*
+	 * Computes the remaining words on the board and saves them in the computerWords-field.
+	 * Also computes the computer's score and saves it in the computerScore-field.
+	 */
+	void playComputerTurn();
+	/*
+	 * Returns the computerWords-field.
+	 */
 	vector<string> getComputerWords() const;
-
+	/*
+	 * Returns the computerScore-field.
+	 */
 	unsigned int getComputerScore() const;
-
+	/*
+	 * Returns the userWords-field.
+	 */
 	vector<string> getUserWords() const;
-	
+	/*
+	 * Returns the userScore-field.
+	 */
 	unsigned int getUserScore() const;
 
 private:
@@ -76,9 +101,14 @@ private:
 	unsigned int userScore;
 
 	unsigned int computerScore;
-	
+	/*
+	 * Help function for isValidWord().
+	 */
 	bool checkValidWordHelp(string word, pair<int,int> currIndex);
-
+	/*
+	 * Help function for getAllRemainingWords(). Finds all words that have not yet been 
+	 * entered by the user and saves them in the given foundWords-variable.
+	 */
 	void getAllRemainingWordsHelp(const string& currentWord,
 								const pair<int,int>& currentIndex,
 								vector<string>& foundWords);

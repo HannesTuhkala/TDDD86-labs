@@ -12,13 +12,21 @@
 bool alreadyExists(const vector<string>& words, const string& word);
 
 Boggle::Boggle() {
-	Lexicon dictionary(DICTIONARY_FILE);
+	dictionary = Lexicon(DICTIONARY_FILE);
 	userScore = 0;
 	computerScore = 0;
 }
 
+void Boggle::reset() {
+	userScore = 0;
+	computerScore = 0;
+	userWords.clear();
+	computerWords.clear();
+}
+
 void Boggle::addUserWord(const string& word) {
 	userWords.push_back(word);
+	userScore += word.size() - MIN_WORD_LENGTH + 1;
 }
 
 void Boggle::setDefaultBoard() {
@@ -52,7 +60,6 @@ bool Boggle::isCorrectFormat(const string& word) const {
 	return isAlpha(word) && word.size() >= MIN_WORD_LENGTH;
 }
 
-//TODO kolla om det går att const-deklarera den här
 vector<string> Boggle::getAllRemainingWords() {
 	vector<string> foundWords;
 	//since the backtracking algorithm needs more parameters for the recursion
@@ -73,19 +80,20 @@ void Boggle::getAllRemainingWordsHelp(const string& currentWord,
 	if (dictionary.containsPrefix(currentWord)) {
 		//...and if the current word is a complete word in the dictionary 
 		//with more than 4 characters and has not already been added or
-		//taken by the user...
+		//taken by the user, and if the last character hasn't already been visited...
+		int currRow = currentIndex.first;
+		int currCol = currentIndex.second;
 		if (currentWord.size() >= 4
 				&& !alreadyExists(foundWords, currentWord) 
 				&& !alreadyExists(userWords, currentWord) 
-				&& dictionary.contains(currentWord)) {
+				&& dictionary.contains(currentWord)
+				&& !board.isVisited(currRow, currCol)) {
 			//We found a word! Push it to the words.
 			foundWords.push_back(currentWord);
 			//Since a valid word could be a prefix, we need to continue...
 		}
 		//Regardless of whether we found a word or the word was only a prefix,
 		//we mark the current character as visited.
-		int currRow = currentIndex.first;
-		int currCol = currentIndex.second;
 		board.setVisited(currRow, currCol, true);
 		//We gather all neighbors to the current character.
 		vector<pair<int,int>> neighbors = board.getNeighbors(currRow, currCol);
@@ -111,13 +119,12 @@ void Boggle::getAllRemainingWordsHelp(const string& currentWord,
 	}
 }
 
-//TODO kolla om man kan const-deklarera detta
 bool Boggle::checkValidWordHelp(string word, pair<int,int> currIndex) {
 	int currRow = currIndex.first;
 	int currCol = currIndex.second;
 	//If there is only one letter in the word, just check and see if it matches the 
-	//character of the current index.
-	if (word.size() == 1) return word[0] == board.cubeSideAt(currRow, currCol);
+	//character of the current index and if it has been visited.
+	if (word.size() == 1) return word[0] == board.cubeSideAt(currRow, currCol) && !board.isVisited(currRow, currCol);
 
 	//Else, if the first letter of the word matches the index of the current character and has not
 	//already been checked:
@@ -154,16 +161,11 @@ bool Boggle::isAlreadyUsed(const string& word) const {
 	return alreadyExists(userWords, word);
 }
 
-vector<string> Boggle::playComputerTurn() {
-	vector<string> computerWords = getAllRemainingWords();
+void Boggle::playComputerTurn() {
+	computerWords = getAllRemainingWords();
 	for (string word : computerWords) {
 		computerScore += word.size() - MIN_WORD_LENGTH + 1;
 	}
-	return computerWords;
-}
-
-void Boggle::addUserScore(unsigned int score) {
-	userScore += score;
 }
 
 bool alreadyExists(const vector<string>& words, const string& word) {
