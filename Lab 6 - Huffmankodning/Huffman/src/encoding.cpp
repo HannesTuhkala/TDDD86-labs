@@ -54,9 +54,23 @@ HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
 	return new HuffmanNode(queue.top());
 }
 
+void preOrder(HuffmanNode* node, map<int, string>& encodingMap, std::string coding = std::string()) {
+    if (!node->isLeaf() && node != nullptr) {
+        cout << node->character << " " << node->count << endl;
+        preOrder(node->zero, encodingMap, coding + "0");
+        encodingMap.insert(make_pair(node->zero->character, coding + "0"));
+        //string temp = coding + "1";
+        preOrder(node->one, encodingMap, coding + "1");
+        encodingMap.insert(make_pair(node->one->character, coding + "1"));
+    }
+}
+
 map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
     // TODO: implement this function
     map<int, string> encodingMap;
+
+    preOrder(encodingTree, encodingMap);
+
     return encodingMap;
 }
 
