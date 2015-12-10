@@ -1,17 +1,57 @@
 #include "encoding.h"
+#include <queue>
 // TODO: include any other headers you need
 
 map<int, int> buildFrequencyTable(istream& input) {
     map<int, int> freqTable;
-
-
-
+	int byte;
+	byte = input.get();
+	while (byte != -1) {
+		if (freqTable.count(byte) == 0) {
+			freqTable.insert(pair<int,int>(byte, 1));
+		} else {
+			freqTable.at(byte)++;
+		}
+		byte = input.get();
+	}
+	freqTable.insert(pair<int,int>(PSEUDO_EOF, 1));
     return freqTable;
 }
 
 HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
-    // TODO: implement this function
-    return nullptr;
+	//Det som du förmodligen fastnade på (det gjorde jag också) var
+	//att du gjorde en priority queue med pekare. Detta funkar inte 
+	//eftersom den kommer då att sortera skiten efter minnesadresser.
+	std::priority_queue<HuffmanNode> queue;
+	//push all character-frequency pairs to the queue.
+	for (auto character : freqTable) {
+		queue.push(HuffmanNode(character.first, character.second));
+	}
+	//start building the tree.
+
+	//create two temporary nodes.
+	HuffmanNode n1;
+	HuffmanNode n2;
+	//as long as there are two or more nodes in the queue, it means that
+	//not all are yet in the same tree, so keep building it.
+	while (queue.size() >= 2) {
+		//pop the two values at the top of the queue and store in n1, n2.
+		n1 = queue.top();
+		queue.pop();
+		n2 = queue.top();
+		queue.pop();
+		//cout << "Första noden: " << n1->character << ": " << n1->count << endl;
+		//cout << "Andra noden: " << n2->character << ": " << n2->count << endl;
+		//sum their frequencies
+		int freqSum = n1.count + n2.count;
+		//create the parent node with the sum of it's children's frequencies
+		//with n1 as left child (since it has the lowest frequency, as it was 
+		//at the top of the queue) and n2 as right child
+		HuffmanNode parent = HuffmanNode(NOT_A_CHAR, freqSum, new HuffmanNode(n1), new HuffmanNode(n2));
+		//push the parent to the queue
+		queue.push(parent);
+	}
+	return new HuffmanNode(queue.top());
 }
 
 map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
