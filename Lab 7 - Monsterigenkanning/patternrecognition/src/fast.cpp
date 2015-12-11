@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
 
 		//start finding collinear lines. Create an index variable.
 		int i = 0;
-		//since we are checking two points ahead, and checking every point except the starting point
+		//since we are checking two points ahead, and checking every point except the starting point,
 		//we check from i = 0 to N-1-2 = N-3.
 		while (i < N - 3) {
 			//get the slopes of this index and the one two indexes away

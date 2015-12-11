@@ -9,7 +9,7 @@ CONFIG += no_include_pwd
 #CONFIG -= qt
 
 # Do not create an app bundle when running on OS X
-#CONFIG -= app_bundle
+CONFIG -= app_bundle
 
 SOURCES = $$PWD/src/*.cpp
 SOURCES += $$PWD/lib/StanfordCPPLib/*.cpp
@@ -60,6 +60,6 @@ OTHER_FILES = $$files(res/*)
 QMAKE_EXTRA_TARGETS += copyResources
 POST_TARGETDEPS += copyResources
 
-macx {
-    cache()
-}
+#macx {
+#    cache()
+#}
