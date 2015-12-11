@@ -35,6 +35,6 @@ defineTest(copyToDestdir) {
 win32 {
     copyToDestdir($$PWD/res)
 }
-macx {
-    cache()
-}
+#macx {
+#    cache()
+#}
