@@ -66,7 +66,6 @@ void preOrder(HuffmanNode* node, map<int, string>& encodingMap, std::string codi
 }
 
 map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
-    // TODO: implement this function
     map<int, string> encodingMap;
 
     preOrder(encodingTree, encodingMap);
@@ -74,8 +73,25 @@ map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
     return encodingMap;
 }
 
+void writeCode(string& code, obitstream& output) {
+	for (size_t i = 0; i < code.size(); ++i) {
+		if (code[i] == '1') {
+			output.writeBit(1);
+		} else {
+			output.writeBit(0);
+		}	
+	}
+}
+
 void encodeData(istream& input, const map<int, string> &encodingMap, obitstream& output) {
-    // TODO: implement this function
+	int byte = input.get();
+	while (byte != -1) {
+		string code = encodingMap.at(byte);
+		writeCode(code, output);
+		byte = input.get();
+	}
+	string eofCode = encodingMap.at(PSEUDO_EOF);
+	writeCode(eofCode, output);
 }
 
 void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
