@@ -13,21 +13,21 @@ const string alphabet  = "abcdefghijklmnopqrstuvwxyz";
 
 set<string> loadDictionary();
 array<int, 2> findWordLengths(set<string>& dictionary);
-void hangMan(set<string>& dictionary, int wordLength, int& guesses, bool debug);
-set<string> narrowDownDictionary(set<string>& dictionary, stack<string> words);
-set<string> narrowDictionaryBasedOnWordLength(set<string> &dictionary, int wordLength);
+void hangMan(set<string>& dictionary, int& wordLength, int& guesses, bool& debug);
+set<string> narrowDownDictionary(set<string> &dictionary, stack<string> words);
+set<string> narrowDictionaryBasedOnWordLength(set<string> &dictionary, int &wordLength);
 void printPossibleWords(set<string> &possibleWords);
-void printWordStatus(int guessesLeft, string& currentWord, set<char>& usedLetters);
+void printWordStatus(int& guessesLeft, string& currentWord, set<char> usedLetters);
 void printGuessStatus(bool guessCorrect);
-map<string, stack<string>> partitionWords(char letter, set<string>& dictionary, string& currentWord);
+map<string, stack<string>> partitionWords(char& letter, set<string>& dictionary, string currentWord);
 pair<string, stack<string>> getLargestPartition(map<string, stack<string>> partitions);
-string createEmptyWord(int length);
-void inputLetter(char letter, set<char>& guessedLetters);
+string createEmptyWord(int& length);
+void inputLetter(char& letter, set<char>& guessedLetters);
 string getPrintableUsedLetters(set<char> &usedLetters);
 bool matches(string& word, string& wordComparison);
 void printStack(stack<string> st);
 bool allLettersGuessed(string word);
-void inputInfo(int length, int& guesses, bool debug, array<int, 2> wordLengths);
+void inputInfo(int& length, int& guesses, bool& debug, array<int, 2> wordLengths);
 
 int main() {
     set<string> dictionary = loadDictionary();
@@ -46,7 +46,7 @@ int main() {
     return 0;
 }
 
-void inputInfo(int length, int& guesses, bool debug, array<int, 2> wordLengths){
+void inputInfo(int& length, int& guesses, bool& debug, array<int, 2> wordLengths){
     bool validWordLength = false;
     do {
         if (validWordLength) {
@@ -96,7 +96,7 @@ array<int, 2> findWordLengths(set<string>& dictionary) {
     return wordLengths;
 }
 
-void hangMan(set<string>& dictionary, int wordLength, int& guesses, bool debug) {
+void hangMan(set<string>& dictionary, int& wordLength, int& guesses, bool& debug) {
     string word = createEmptyWord(wordLength);
     dictionary = narrowDictionaryBasedOnWordLength(dictionary, wordLength);
     bool continueGame = true;
@@ -119,15 +119,14 @@ void hangMan(set<string>& dictionary, int wordLength, int& guesses, bool debug) 
         word = largestPartition.first;
         dictionary = narrowDownDictionary(dictionary, largestPartition.second);
         if (guesses == 1){
-            cout << "Final guess!" << endl;
+            cout << "Final guess, BITCH!" << endl;
         }
         if (guesses == 0){
-            cout << "HAHA! WRONG LAST GUESS!" << endl;
+            cout << "HAHA! YOU SUCK BITCH!" << endl;
             cout << "The word was in fact: " << largestPartition.second.top() << endl;
             continueGame = false;
         } else if (allLettersGuessed(word)){
-            cout << "Wow... you actually won..." << endl
-                 << "The word was: " << largestPartition.second.top() << "." << endl;
+            cout << "Wow... you actually won..." << endl;
             continueGame = false;
         }
     }
@@ -150,7 +149,7 @@ pair<string, stack<string>> getLargestPartition(map<string, stack<string>> parti
     return largest;
 }
 
-map<string, stack<string>> partitionWords(char letter, set<string>& dictionary, string& currentWord){
+map<string, stack<string>> partitionWords(char& letter, set<string>& dictionary, string currentWord){
     map<string, stack<string>> mapStack;
     for (string word : dictionary){
         stack<string> currentStack;
@@ -182,7 +181,7 @@ void printStack(stack<string> st){
     }
 }
 
-void inputLetter(char letter, set<char>& usedLetters){
+void inputLetter(char& letter, set<char>& usedLetters){
     bool incorrectInput = true;
     string temp;
     while (incorrectInput) {
@@ -198,7 +197,7 @@ void inputLetter(char letter, set<char>& usedLetters){
     }
 }
 
-string createEmptyWord(int length){
+string createEmptyWord(int& length){
     return string(length, '-');
 }
 
@@ -210,7 +209,7 @@ void printGuessStatus(bool guessCorrect){
     }
 }
 
-void printWordStatus(int guessesLeft, string& currentWord, set<char>& usedLetters){
+void printWordStatus(int& guessesLeft, string& currentWord, set<char> usedLetters){
     cout << "Guesses left: " << guessesLeft << endl
          << "Used letters: " << getPrintableUsedLetters(usedLetters) << endl
          << "Current word: " << currentWord << endl << endl;
@@ -226,7 +225,7 @@ string getPrintableUsedLetters(set<char>& usedLetters){
     return result.substr(0, result.length() - 2);
 }
 
-set<string> narrowDictionaryBasedOnWordLength(set<string>& dictionary, int wordLength){
+set<string> narrowDictionaryBasedOnWordLength(set<string>& dictionary, int& wordLength){
     set<string> newDictionary;
     for (string word : dictionary) {
         if (word.length() == wordLength) {

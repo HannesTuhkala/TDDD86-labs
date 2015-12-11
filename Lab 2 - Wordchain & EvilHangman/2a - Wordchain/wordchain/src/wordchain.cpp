@@ -12,7 +12,6 @@ const string alphabet = "abcdefghijklmnopqrstuvwxyz";
 bool isCorrectWord(const string& possibleWord, const string& correctWord);
 void checkAllPossibleWords(set<string>& dictionary, queue<stack<string>>& queueStack, stack<string>& firstStack, set<string>& usedWords);
 void greetUser();
-void goodBye();
 void printContents(stack<string>& stck);
 bool isValidWord(set<string>& dictionary, string& word);
 bool hasBeenUsed(set<string>& usedWords, string& word);
@@ -43,7 +42,7 @@ int main() {
         }
     }
 
-    goodBye();
+    cout << "Have a nice day!" << endl;
     return 0;
 }
 
@@ -81,10 +80,6 @@ void greetUser() {
          << "If you give me two English words, I will transform the" << endl
          << "first into the second by changing one letter at a time." << endl << endl
          << "Please type two words: ";
-}
-
-void goodBye() {
-    cout << "Have a nice day!" << endl;
 }
 
 bool hasBeenUsed(set<string>& usedWords, string& word) {

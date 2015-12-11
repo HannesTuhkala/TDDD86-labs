@@ -43,11 +43,16 @@
  *	Algoritmen ligger därför i O(nCr(n, 4)) i det värsta fallet.
  *	
  **********************************************************************
+ *	Fast.
+ *	Det värsta fallet för denna algoritm är, till skillnad från brute force, 
+ *	inträffar när inga punkter ligger på en linje med 4 eller fler punkter.
+ *	Då blir while-loopen som letar efter punkter på rad linjär, då den söker
+ *	genom N-3 punkter. Den mest kostsammma funktionen i den stora for-loopen blir 
+ *	därför sorteringen av jämförelselistan den kostsammaste funktionen, som 
+ *	kostar O(nlog(n)) tid. Eftersom den är i den stora for-loopen som itererar
+ *	över alla punkter, utförs sorteringen n gånger.
  *	
- *	
- *	
- *	
- *	
+ *	Algoritmen ligger därför i O(n²log(n)).
  *	
  **********************************************************************/
 
