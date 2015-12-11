@@ -79,7 +79,7 @@ void writeCode(string& code, obitstream& output) {
 			output.writeBit(1);
 		} else {
 			output.writeBit(0);
-		}	
+		}
 	}
 }
 
@@ -94,12 +94,26 @@ void encodeData(istream& input, const map<int, string> &encodingMap, obitstream&
 	writeCode(eofCode, output);
 }
 
+int getCharacter(ibitstream& input, HuffmanNode* tree) {
+	if (tree->isLeaf()) return tree->character;
+	int bit = input.readBit();
+	if (bit == 1) return getCharacter(input, tree->one);
+	else return getCharacter(input, tree->zero);
+}
+
 void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
-    // TODO: implement this function
+	while (true) {
+		int character = getCharacter(input, encodingTree);
+		if (character == PSEUDO_EOF) return;
+		output.put(character);
+	}
 }
 
 void compress(istream& input, obitstream& output) {
-    // TODO: implement this function
+	map<int, int> freqTable = buildFrequencyTable(input);
+	HuffmanNode* encodingTree = buildEncodingTree(freqTable);
+	map<int, string> encodingMap = buildEncodingMap(encodingTree);
+	
 }
 
 void decompress(ibitstream& input, ostream& output) {
