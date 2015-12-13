@@ -6,6 +6,7 @@ map<int, int> buildFrequencyTable(istream& input) {
     map<int, int> freqTable;
 	int byte;
 	byte = input.get();
+
 	while (byte != -1) {
 		if (freqTable.count(byte) == 0) {
 			freqTable.insert(pair<int,int>(byte, 1));
@@ -14,14 +15,12 @@ map<int, int> buildFrequencyTable(istream& input) {
 		}
 		byte = input.get();
 	}
+
 	freqTable.insert(pair<int,int>(PSEUDO_EOF, 1));
     return freqTable;
 }
 
 HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
-	//Det som du förmodligen fastnade på (det gjorde jag också) var
-	//att du gjorde en priority queue med pekare. Detta funkar inte 
-	//eftersom den kommer då att sortera skiten efter minnesadresser.
 	std::priority_queue<HuffmanNode> queue;
 	//push all character-frequency pairs to the queue.
 	for (auto character : freqTable) {
@@ -40,8 +39,7 @@ HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
 		queue.pop();
 		n2 = queue.top();
 		queue.pop();
-		//cout << "Första noden: " << n1->character << ": " << n1->count << endl;
-		//cout << "Andra noden: " << n2->character << ": " << n2->count << endl;
+
 		//sum their frequencies
 		int freqSum = n1.count + n2.count;
 		//create the parent node with the sum of it's children's frequencies
@@ -54,20 +52,17 @@ HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
 	return new HuffmanNode(queue.top());
 }
 
-void preOrder(HuffmanNode* node, map<int, string>& encodingMap, std::string coding = std::string()) {
-    if (!node->isLeaf() && node != nullptr) {
-        cout << node->character << " " << node->count << endl;
-        preOrder(node->zero, encodingMap, coding + "0");
-        encodingMap.insert(make_pair(node->zero->character, coding + "0"));
-        //string temp = coding + "1";
-        preOrder(node->one, encodingMap, coding + "1");
-        encodingMap.insert(make_pair(node->one->character, coding + "1"));
+void preOrder(HuffmanNode* currentNode, map<int, string>& encodingMap, std::string coding = std::string()) {
+    if (currentNode->isLeaf()) {
+        encodingMap.insert(make_pair(currentNode->character, coding));
+    } else {
+        preOrder(currentNode->zero, encodingMap, coding + "0");
+        preOrder(currentNode->one, encodingMap, coding + "1");
     }
 }
 
 map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
     map<int, string> encodingMap;
-
     preOrder(encodingTree, encodingMap);
 
     return encodingMap;
@@ -109,17 +104,112 @@ void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
 	}
 }
 
+writeHeader(const map<int, int>& freqTable, obitstream& output) {
+    output.put('{');
+    for (map<int, int>::const_iterator it = freqTable.begin(); it != freqTable.end(); ++it) {
+        if (it != freqTable.begin()) {
+            output.put(',');
+            output.put(' ');
+        }
+
+        string key = to_string(it->first);
+        for (int i = 0; i < key.size(); ++i) {
+            output.put(key[i]);
+        }
+
+        output.put(':');
+
+        string freq = to_string(it->second);
+        for (int i = 0; i < freq.size(); ++i) {
+            output.put(freq[i]);
+        }
+    }
+
+    output.put('}');
+}
+
 void compress(istream& input, obitstream& output) {
 	map<int, int> freqTable = buildFrequencyTable(input);
 	HuffmanNode* encodingTree = buildEncodingTree(freqTable);
 	map<int, string> encodingMap = buildEncodingMap(encodingTree);
-	
+
+    writeHeader(freqTable, output);
+    input.clear();
+    input.seekg(0, ios::beg);
+
+    encodeData(input, encodingMap, output);
+    freeTree(encodingTree);
+}
+
+map<int, int> readHeader(istream& input) {
+    map<int, int> freqTable;
+    // Gets the '{'
+    input.get();
+    char byte;
+
+    // While the header doesn't end do..
+    while ((byte = input.get()) != '}') {
+        string key;
+
+        // get each byte until it finds a ':'
+        while (byte != ':') {
+            key += string(1, byte);
+            byte = input.get();
+        }
+
+        string freq;
+
+        // get each byte until it finds a ',' or a '}'
+        while ((byte = input.get()) != ',' && byte != '}') {
+            freq += string(1, byte);
+        }
+
+        freqTable.insert(make_pair(atoi(key.c_str()), atoi(freq.c_str())));
+
+        // we have to check here, and it is only true if we are at the last element of the header.
+        if (byte == '}') {
+            break;
+        }
+
+        // gets a whitespace ' '
+        input.get();
+    }
 }
 
 void decompress(ibitstream& input, ostream& output) {
-    // TODO: implement this function
+    map<int, int> freqTable = readHeader(input);
+    HuffmanNode* encodingTree = buildEncodingTree(freqTable);
+    decodeData(input, encodingTree, output);
+    freeTree(encodingTree);
 }
 
 void freeTree(HuffmanNode* node) {
-    // TODO: implement this function
+    // en version
+    /*if (node->zero->isLeaf()) {
+        delete node->zero;
+    } else {
+        freeTree(node->zero);
+    }
+
+    if (node->one->isLeaf()) {
+        delete node->one;
+    } else {
+        freeTree(node->one);
+    } */
+
+    // en annan version
+    if (node == nullptr) {
+        return;
+    } else if (node->isLeaf()) {
+        delete node;
+    } else {
+        freeTree(node->zero);
+        freeTree(node->one);
+    }
+
+    cout << "HEJHEJ" << endl;
+    delete node;
+    cout << "HEJHEJ2" << endl;
 }
+
+
