@@ -104,7 +104,7 @@ void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
 	}
 }
 
-writeHeader(const map<int, int>& freqTable, obitstream& output) {
+void writeHeader(const map<int, int>& freqTable, obitstream& output) {
     output.put('{');
     for (map<int, int>::const_iterator it = freqTable.begin(); it != freqTable.end(); ++it) {
         if (it != freqTable.begin()) {
@@ -113,14 +113,14 @@ writeHeader(const map<int, int>& freqTable, obitstream& output) {
         }
 
         string key = to_string(it->first);
-        for (int i = 0; i < key.size(); ++i) {
+        for (unsigned int i = 0; i < key.size(); ++i) {
             output.put(key[i]);
         }
 
         output.put(':');
 
         string freq = to_string(it->second);
-        for (int i = 0; i < freq.size(); ++i) {
+        for (unsigned int i = 0; i < freq.size(); ++i) {
             output.put(freq[i]);
         }
     }
@@ -146,17 +146,17 @@ map<int, int> readHeader(istream& input) {
     // Gets the '{'
     input.get();
     char byte;
-
+	cout << "HEJ HEJ NU SKA VI BÖRJA LÄSA HEADERN! DET SKA BLI JÄTTEKUL!" << endl;
     // While the header doesn't end do..
     while ((byte = input.get()) != '}') {
         string key;
-
+		cout << "1" << endl;
         // get each byte until it finds a ':'
         while (byte != ':') {
             key += string(1, byte);
             byte = input.get();
         }
-
+		cout << "2" << endl;
         string freq;
 
         // get each byte until it finds a ',' or a '}'
@@ -164,6 +164,8 @@ map<int, int> readHeader(istream& input) {
             freq += string(1, byte);
         }
 
+		cout << "3" << endl;
+		
         freqTable.insert(make_pair(atoi(key.c_str()), atoi(freq.c_str())));
 
         // we have to check here, and it is only true if we are at the last element of the header.
@@ -171,9 +173,11 @@ map<int, int> readHeader(istream& input) {
             break;
         }
 
+		cout << "4" << endl;
         // gets a whitespace ' '
         input.get();
     }
+	return freqTable;
 }
 
 void decompress(ibitstream& input, ostream& output) {
@@ -185,7 +189,7 @@ void decompress(ibitstream& input, ostream& output) {
 
 void freeTree(HuffmanNode* node) {
     // en version
-    /*if (node->zero->isLeaf()) {
+    if (node->zero->isLeaf()) {
         delete node->zero;
     } else {
         freeTree(node->zero);
@@ -195,17 +199,17 @@ void freeTree(HuffmanNode* node) {
         delete node->one;
     } else {
         freeTree(node->one);
-    } */
+    }
 
     // en annan version
-    if (node == nullptr) {
-        return;
-    } else if (node->isLeaf()) {
-        delete node;
-    } else {
-        freeTree(node->zero);
-        freeTree(node->one);
-    }
+    //if (node == nullptr) {
+    //    return;
+    //} else if (node->isLeaf()) {
+    //    delete node;
+    //} else {
+    //    freeTree(node->zero);
+    //    freeTree(node->one);
+    //}
 
     cout << "HEJHEJ" << endl;
     delete node;

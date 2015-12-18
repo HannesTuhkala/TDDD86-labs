@@ -119,10 +119,10 @@ void hangMan(set<string>& dictionary, int& wordLength, int& guesses, bool& debug
         word = largestPartition.first;
         dictionary = narrowDownDictionary(dictionary, largestPartition.second);
         if (guesses == 1){
-            cout << "Final guess, BITCH!" << endl;
+            cout << "Final guess!" << endl;
         }
         if (guesses == 0){
-            cout << "HAHA! YOU SUCK BITCH!" << endl;
+            cout << "HAHA! YOU LOST!" << endl;
             cout << "The word was in fact: " << largestPartition.second.top() << endl;
             continueGame = false;
         } else if (allLettersGuessed(word)){

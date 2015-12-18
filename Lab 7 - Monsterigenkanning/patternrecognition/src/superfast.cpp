@@ -100,7 +100,6 @@ int main(int argc, char *argv[]) {
     view->resize(view->sizeHint());
     view->setWindowTitle("Extra Fast Pattern Recognition");
     view->show();
-	int segments = 0;
     auto begin = chrono::high_resolution_clock::now();
 	//do all of this using each point as starting point
 	for (int startingPoint = 0; startingPoint < N; ++startingPoint) {
@@ -137,7 +136,6 @@ int main(int argc, char *argv[]) {
 			//slope. Since we only want to draw one single line segment between these lines, we include this
 			//as a condition to draw the line.
 			if (slope1 == slope2 && *comparisons[0].comparePoint < *comparisons[i].thisPoint) {
-				segments++;
 				int j = i + 3;
 				while (slope1 == comparisons[j].slope && j < N - 1) {
 					//we found another aligned point!
@@ -163,6 +161,5 @@ int main(int argc, char *argv[]) {
     cout << "Computing line segments took "
          << std::chrono::duration_cast<chrono::milliseconds>(end - begin).count()
          << " milliseconds." << endl;
-	cout << "Drew " << segments << " segments." << endl;
 	return a.exec();
 }

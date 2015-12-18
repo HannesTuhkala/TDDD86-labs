@@ -4,7 +4,7 @@ CONFIG += console
 
 # Make sure we do not accidentally #include files placed in 'resources'
 CONFIG += no_include_pwd
-
+CONFIG += c++11
 # Reduce compile times and avoid configuration confusion by excluding Qt libs
 #CONFIG -= qt
 

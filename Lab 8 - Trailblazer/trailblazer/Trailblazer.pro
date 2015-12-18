@@ -9,6 +9,7 @@ CONFIG += no_include_pwd
 # Do not create an app bundle when running on OS X
 #CONFIG -= app_bundle
 
+#CONFIG += debug_and_release
 SOURCES = $$PWD/src/*.cpp
 SOURCES += $$PWD/lib/StanfordCPPLib/*.cpp
 
