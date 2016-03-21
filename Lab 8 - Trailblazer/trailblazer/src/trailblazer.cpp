@@ -83,6 +83,7 @@ vector<Node *> breadthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end)
 		end = end->previous;
 	} while (start != end);
 	path.push_back(start);
+	// reverse the vector, since it is in the wrong order
 	reverse(path.begin(), path.end());
     return path;
 }
@@ -100,12 +101,16 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
 		Vertex* curr = queue.dequeue();
 		curr->visited = true;
 		curr->setColor(GREEN);
+		// if the end is reached, we are done
 		if (curr == end) break;
+		//explore every unvisited neighbor to curr
 		for (Arc* arc : curr->arcs) {
 			Vertex* neighbor = arc->finish;
 			if (!neighbor->visited) {
+				// calculate neighbor cost
 				double cost = curr->cost + arc->cost;
-				//cout << arc->cost << endl;
+				// if the cost is less than the previous neighbor cost value,
+				// we enqueue it with the new cost
 				if (cost < neighbor->cost) {
 					neighbor->previous = curr;
 					if (neighbor->cost != std::numeric_limits<double>::infinity()) {
@@ -119,21 +124,64 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
 			}
 		}
 	}
+	// reconstruct path from end to start
     vector<Vertex*> path;
 	do {
 		path.push_back(end);
 		end = end->previous;
 	} while (start != end);
 	path.push_back(start);
+	// reverse the vector, since it is in the wrong order
 	reverse(path.begin(), path.end());
     return path;
 }
 
 vector<Node *> aStar(BasicGraph& graph, Vertex* start, Vertex* end) {
-    // TODO: implement this function; remove these comments
-    //       (The function body code provided below is just a stub that returns
-    //        an empty vector so that the overall project will compile.
-    //        You should remove that code and replace it with your implementation.)
+	graph.resetData();
+	PriorityQueue<Vertex*> queue;
+	for (Vertex* v : graph.getVertexSet()) {
+		v->cost = std::numeric_limits<double>::infinity();
+	}
+	start->cost = 0;
+	start->setColor(YELLOW);
+	queue.enqueue(start, start->heuristic(end));
+	while (!queue.isEmpty()) {
+		Vertex* curr = queue.dequeue();
+		curr->visited = true;
+		curr->setColor(GREEN);
+		// if the end is reached, we are done
+		if (curr == end) break;
+		//explore every unvisited neighbor to curr
+		for (Arc* arc : curr->arcs) {
+			Vertex* neighbor = arc->finish;
+			if (!neighbor->visited) {
+				// calculate neighbor cost
+				double cost = curr->cost + arc->cost;
+				// if the cost is less than the previous neighbor cost value,
+				// we enqueue it with the new cost
+				if (cost < neighbor->cost) {
+					neighbor->previous = curr;
+					if (neighbor->cost != std::numeric_limits<double>::infinity()) {
+						// set priority according to A* heuristic
+						queue.changePriority(neighbor, cost + neighbor->heuristic(end));
+					} else {
+						neighbor->setColor(YELLOW);
+						// set priority according to A* heuristic
+						queue.enqueue(neighbor, cost + neighbor->heuristic(end));
+					}
+					neighbor->cost = cost;
+				} 
+			}
+		}
+	}
+	// reconstruct path from end to start
     vector<Vertex*> path;
+	do {
+		path.push_back(end);
+		end = end->previous;
+	} while (start != end);
+	path.push_back(start);
+	// reverse the vector, since it is in the wrong order
+	reverse(path.begin(), path.end());
     return path;
 }
