@@ -61,7 +61,7 @@ bool Board::isNeighbor(int row, int col, char c) const {
 		for (int c = col - 1; c <= col + 1; ++c) {
 			if (cubes.inBounds(r, c)) {
 				indices.push_back(pair<int,int>(r, c));
-p			}
+			}
 		}
 	}
 	for (auto index : indices) {
