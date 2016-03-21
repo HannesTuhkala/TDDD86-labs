@@ -77,7 +77,7 @@ vector<Node *> breadthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end)
 			}
 		}
 	}
-	//start reconstructing path using a stack to reverse the order
+	//start reconstructing path
 	do {
 		path.push_back(end);
 		end = end->previous;
@@ -101,10 +101,11 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
 		curr->visited = true;
 		curr->setColor(GREEN);
 		if (curr == end) break;
-		for (Arc* arc : start->arcs) {
+		for (Arc* arc : curr->arcs) {
 			Vertex* neighbor = arc->finish;
 			if (!neighbor->visited) {
 				double cost = curr->cost + arc->cost;
+				//cout << arc->cost << endl;
 				if (cost < neighbor->cost) {
 					neighbor->previous = curr;
 					if (neighbor->cost != std::numeric_limits<double>::infinity()) {
@@ -114,7 +115,7 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
 						queue.enqueue(neighbor, cost);
 					}
 					neighbor->cost = cost;
-				}
+				} 
 			}
 		}
 	}
