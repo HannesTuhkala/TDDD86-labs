@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include "Key.h"
+#include <vector>
 
 #define SUBSET_SIZE 4
 
@@ -40,6 +41,24 @@ int numberOfSubsets(unsigned tableSize, unsigned subsetSize) {
 	// bilda ur en tabell med storlek tableSize???
 }
 
+/*
+ * Checks whether this is the last subset to check.
+ * For example, with a subset size of 3, and N = 5, 
+ * it returns true iff currentSubset = [2, 3, 4]
+ */
+bool isLastSubset(vector<unsigned> currentSubset) {
+	for (unsigned i = 0; i < SUBSET_SIZE; ++i) {
+		if (currentSubset[i] != N - SUBSET_SIZE + i) return false;
+	}
+	return true;
+}
+
+//bool incrementCurrentSubset(vector<unsigned> currentSubset) {
+//	for (unsigned i = SUBSET_SIZE - 1; i >= 0; --i) {
+//		if ()
+//	}
+//}
+
 int main(int argc, char* argv[]) {
 	// TODO Vi kan nog behöva ändra de här
 	unsigned char buffer[C+1];     // temporary string buffer
@@ -65,9 +84,27 @@ int main(int argc, char* argv[]) {
 	auto begin = chrono::high_resolution_clock::now();
 
 	int subsets = numberOfSubsets(N, SUBSET_SIZE);
+ 
+	// tells us which rows of the table
+	// we are choosing for this subset
+	vector<unsigned> currentSubset;
 
-	//HashTable* t = hashTableInit();
+	for (unsigned i = 0; i < SUBSET_SIZE; ++i) {
+		currentSubset.push_back(i);
+	}
+
+	bool found = false;
+
+	// increment currentSubset
+	do {
+
 	// TODO här kommer allt sökande
+	// Jag vet inte exakt hur man ska skapa en key med 
+	// så många ettställda bitar som man vill ha. Inte heller 
+	// vet jag hur det är tänkt att man ska kunna. Jag vet inte 
+	// vad jag håller på med längre.
+	
+	} while (!found && !isLastSubset(currentSubset));
 	
 	auto end = chrono::high_resolution_clock::now();
 	cout << "Decryption took "
