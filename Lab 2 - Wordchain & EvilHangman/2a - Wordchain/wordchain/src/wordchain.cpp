@@ -35,6 +35,7 @@ int main() {
         stack<string> firstStack = queueStack.front();
         queueStack.pop();
         if (isCorrectWord(firstStack.top(), secondWord)) {
+            cout << "Chain from " << firstWord << " to " << secondWord << endl;
             printContents(firstStack);
             emptyQueue(queueStack);
         } else {
