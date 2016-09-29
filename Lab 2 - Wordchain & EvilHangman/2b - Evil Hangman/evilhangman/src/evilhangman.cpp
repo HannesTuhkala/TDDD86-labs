@@ -21,7 +21,7 @@ const string alphabet  = "abcdefghijklmnopqrstuvwxyz";
 set<string> loadDictionary();
 array<int, 2> findWordLengths(set<string>& dictionary);
 void hangMan(set<string>& dictionary, int& wordLength, int& guesses, bool& debug);
-set<string> narrowDownDictionary(set<string> &dictionary, stack<string> words);
+set<string> narrowDownDictionary(stack<string> words);
 set<string> narrowDictionaryBasedOnWordLength(set<string> &dictionary, int &wordLength);
 void printPossibleWords(set<string> &possibleWords);
 void printWordStatus(int& guessesLeft, string& currentWord, set<char> usedLetters);
@@ -75,6 +75,9 @@ void inputInfo(int& length, int& guesses, bool& debug, array<int, 2> wordLengths
     debug = ans == 'y';
 }
 
+/*
+ * Loads the dictionary into a set
+ */
 set<string> loadDictionary(){
     ifstream input;
     set<string> dictionary;
@@ -87,6 +90,10 @@ set<string> loadDictionary(){
     return dictionary;
 }
 
+/*
+ * Returns an array with the length of the shortest word in the dictionary,
+ * and the length of the longest.
+ */
 array<int, 2> findWordLengths(set<string>& dictionary) {
     int longestWord;
     int shortestWord = longestWord = dictionary.begin()->length();
@@ -103,6 +110,9 @@ array<int, 2> findWordLengths(set<string>& dictionary) {
     return wordLengths;
 }
 
+/*
+ * The main function for the game.
+ */
 void hangMan(set<string>& dictionary, int& wordLength, int& guesses, bool& debug) {
     string word = createEmptyWord(wordLength);
     dictionary = narrowDictionaryBasedOnWordLength(dictionary, wordLength);
@@ -113,18 +123,29 @@ void hangMan(set<string>& dictionary, int& wordLength, int& guesses, bool& debug
         printWordStatus(guesses, word, usedLetters);
         cout << "Guess a letter: ";
         char letter;
+
+        // read quessed character
         inputLetter(letter, usedLetters);
         usedLetters.insert(letter);
+
+        // create partitions based on given character
         map<string, stack<string>> partitions = partitionWords(letter, dictionary, word);
+
+        // this contains the guess with the largest amount of matching words.
         pair<string, stack<string>> largestPartition = getLargestPartition(partitions);
-        if (largestPartition.first == word){ //this means that the user guessed incorrectly
+
+        if (largestPartition.first == word){ 
+            // this means that the user guessed "incorrectly",
+            // since the current word did not change as we selected a partition
             printGuessStatus(false);
             guesses--;
         } else {
             printGuessStatus(true);
         }
         word = largestPartition.first;
-        dictionary = narrowDownDictionary(dictionary, largestPartition.second);
+
+        // shrink the dictionary to the words that with the current word
+        dictionary = narrowDownDictionary(largestPartition.second);
         if (guesses == 1){
             cout << "Final guess!" << endl;
         }
@@ -141,6 +162,9 @@ void hangMan(set<string>& dictionary, int& wordLength, int& guesses, bool& debug
     }
 }
 
+/*
+ * Determines whether all letters are guessed based on the current word.
+ */
 bool allLettersGuessed(string word){
     for (char c : word){
         if (c == '-') return false;
@@ -148,6 +172,9 @@ bool allLettersGuessed(string word){
     return true;
 }
 
+/*
+ * Finds the largest partition in the map of partitions
+ */
 pair<string, stack<string>> getLargestPartition(map<string, stack<string>> partitions){
     pair<string, stack<string>> largest;
     for (auto& currentPair : partitions) {
@@ -158,6 +185,10 @@ pair<string, stack<string>> getLargestPartition(map<string, stack<string>> parti
     return largest;
 }
 
+/*
+ * Maps every word where the given letter can be placed to every word that matches that
+ * word in the dictionary. For example, "---e" would map to words like "make" or "like".
+ */
 map<string, stack<string>> partitionWords(char& letter, set<string>& dictionary, string currentWord){
     map<string, stack<string>> stackMap;
     for (string word : dictionary){
@@ -183,6 +214,9 @@ map<string, stack<string>> partitionWords(char& letter, set<string>& dictionary,
     return stackMap;
 }
 
+/*
+ * Empties a stack and prints its contents.
+ */
 void printStack(stack<string> st){
     while (!st.empty()){
         cout << st.top() << endl;
@@ -190,6 +224,9 @@ void printStack(stack<string> st){
     }
 }
 
+/*
+ * Asks the user for a letter, and puts it in place of the given letter
+ */
 void inputLetter(char& letter, set<char>& usedLetters){
     bool incorrectInput = true;
     string temp;
@@ -206,6 +243,9 @@ void inputLetter(char& letter, set<char>& usedLetters){
     }
 }
 
+/*
+ * Creates a string of dashes with the given length
+ */
 string createEmptyWord(int& length){
     return string(length, '-');
 }
@@ -224,6 +264,9 @@ void printWordStatus(int& guessesLeft, string& currentWord, set<char> usedLetter
          << "Current word: " << currentWord << endl << endl;
 }
 
+/*
+ * Gets a nice string of the currently used letters.
+ */
 string getPrintableUsedLetters(set<char>& usedLetters){
     if (usedLetters.empty()) return "None";
     string result = "";
@@ -234,6 +277,9 @@ string getPrintableUsedLetters(set<char>& usedLetters){
     return result.substr(0, result.length() - 2);
 }
 
+/*
+ * Creates a new dictionary with only the words that match the word length
+ */
 set<string> narrowDictionaryBasedOnWordLength(set<string>& dictionary, int& wordLength){
     set<string> newDictionary;
     for (string word : dictionary) {
@@ -244,7 +290,10 @@ set<string> narrowDictionaryBasedOnWordLength(set<string>& dictionary, int& word
     return newDictionary;
 }
 
-set<string> narrowDownDictionary(set<string>& dictionary, stack<string> words) {
+/*
+ * Creates a new dictionary from the stack of words
+ */
+set<string> narrowDownDictionary(stack<string> words) {
     set<string> newDictionary;
     while(!words.empty()){
         newDictionary.insert(words.top());
@@ -253,6 +302,10 @@ set<string> narrowDownDictionary(set<string>& dictionary, stack<string> words) {
     return newDictionary;
 }
 
+/*
+ * Checks whether a word matches a word with dashes. The dashes are considered to 
+ * be any character.
+ */
 bool matches(string& word, string& wordComparison){
     for (size_t i = 0; i < word.length(); ++i){
         if (word[i] != wordComparison[i] && wordComparison[i] != '-'){
@@ -262,6 +315,9 @@ bool matches(string& word, string& wordComparison){
     return true;
 }
 
+/*
+ * Prints a set of words.
+ */
 void printPossibleWords(set<string>& possibleWords) {
     for (string word : possibleWords) {
         cout << word << endl;
