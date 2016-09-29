@@ -8,6 +8,7 @@ SOURCES += mainwindow.cpp \
     Tile.cpp \
     TileList.cpp
 QMAKE_CXXFLAGS += -std=c++11
+QT_QPA_PLATFORM='' executable
 macx {
     cache()
 }

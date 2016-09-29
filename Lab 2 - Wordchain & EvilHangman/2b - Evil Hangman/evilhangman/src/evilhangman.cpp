@@ -126,7 +126,9 @@ void hangMan(set<string>& dictionary, int& wordLength, int& guesses, bool& debug
             cout << "The word was in fact: " << largestPartition.second.top() << endl;
             continueGame = false;
         } else if (allLettersGuessed(word)){
-            cout << "Wow... you actually won..." << endl;
+            cout << "Wow... you actually won..." << endl
+                << "The word was really \"" << word << "\"" << endl;
+
             continueGame = false;
         }
     }
