@@ -12,14 +12,15 @@ Tour::Tour()
 // fungerar inte som det ska. Programmet körs fortfarande.
 Tour::~Tour()
 {
-    Node* currentNode = firstNode;
+    Node* currentNode = firstNode->next;
     Node* tempNode;
 
-    while (currentNode != nullptr) {
+    while (currentNode != firstNode) {
         tempNode = currentNode;
         currentNode = currentNode->next;
         delete tempNode;
     }
+    delete firstNode;
 }
 
 void Tour::show() const

@@ -1,3 +1,10 @@
+/*
+ * This is an evil implementation of the hangman game.
+ * By Malcolm Vigren (malvi108) and Hannes Tuhklala (hantu447).
+ *
+ */
+
+
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -152,7 +159,7 @@ pair<string, stack<string>> getLargestPartition(map<string, stack<string>> parti
 }
 
 map<string, stack<string>> partitionWords(char& letter, set<string>& dictionary, string currentWord){
-    map<string, stack<string>> mapStack;
+    map<string, stack<string>> stackMap;
     for (string word : dictionary){
         stack<string> currentStack;
         string temp;
@@ -166,14 +173,14 @@ map<string, stack<string>> partitionWords(char& letter, set<string>& dictionary,
             }
         }
         //cout << temp << endl;
-        if (mapStack.count(temp) == 0) {
+        if (stackMap.count(temp) == 0) {
             currentStack.push(word);
-            mapStack.insert(pair<string, stack<string>>(temp, currentStack));
+            stackMap.insert(pair<string, stack<string>>(temp, currentStack));
         } else {
-            mapStack.at(temp).push(word);
+            stackMap.at(temp).push(word);
         }
     }
-    return mapStack;
+    return stackMap;
 }
 
 void printStack(stack<string> st){
