@@ -65,8 +65,6 @@ int Tour::size() const
     // if linked list is empty it obviously has 0 nodes => size = 0
     if (currentNode == nullptr) {
         return size;
-    } else if (currentNode->next == firstNode) { // if node points to itself => size = 1
-        return ++size;
     }
 
     // go through every node in the linked list and increment size
@@ -147,9 +145,6 @@ void Tour::insertSmallest(const Point& p)
         newNode->next = newNode;
         firstNode = newNode;
     } else {
-        // does the length change if we put the point in the first position?
-        // TODO: look this up!!
-
         // iterate every node in the linked list and put in the new node and see distance for each one
         do {
             // add the node to the current position
