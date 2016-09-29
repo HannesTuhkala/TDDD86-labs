@@ -46,7 +46,24 @@ int TileList::indexOfTopTile(const int x, const int y) const
 			return i; 
 		}
 	}
+
 	return -1;
+}
+
+void TileList::raise(const int x, const int y)
+{
+    int index = indexOfTopTile(x, y);
+    if (index == -1) return;
+
+    Tile tile = tiles[index];
+    pushElementsToLeft(index);
+    tiles[size - 1] = tile;
+}
+
+void TileList::pushElementsToLeft(const int index) {
+    for (int i = index; i < size - 1; ++i) {
+        tiles[i] = tiles[i + 1];
+    }
 }
 
 void TileList::lower(const int x, const int y)
@@ -54,19 +71,12 @@ void TileList::lower(const int x, const int y)
     int index = indexOfTopTile(x, y);
     if (index == -1) return;
     Tile tile = tiles[index];
+
     for (int i = index; i > 0; --i) {
         tiles[i] = tiles[i - 1];
     }
-    tiles[0] = tile;
-}
 
-void TileList::raise(const int x, const int y)
-{
-    int index = indexOfTopTile(x, y);
-	if (index == -1) return;
-	Tile tile = tiles[index];
-    pushElementsToLeft(index);
-    tiles[size - 1] = tile;
+    tiles[0] = tile;
 }
 
 void TileList::remove(const int x, const int y)
@@ -75,12 +85,6 @@ void TileList::remove(const int x, const int y)
 	if (index == -1) return;
     pushElementsToLeft(index);
     --size;
-}
-
-void TileList::pushElementsToLeft(const int index) {
-    for (int i = index; i < size - 1; ++i) {
-        tiles[i] = tiles[i + 1];
-    }
 }
 
 void TileList::removeAll(const int x, const int y)

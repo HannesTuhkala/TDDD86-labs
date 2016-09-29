@@ -30,9 +30,8 @@ void Tour::show() const
     // if linked list is empty print newline
     if (currentNode == nullptr) {
         cout << endl;
-    } else if (currentNode->next == firstNode) { // if list only has one node, print it
-        cout << currentNode->point.toString() << endl;
-    } else {
+    }
+    else {
         // print each node until the currentnode is equal to the firstnode
         do {
             cout << currentNode->point.toString() << endl;
