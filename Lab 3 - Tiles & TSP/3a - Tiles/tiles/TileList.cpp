@@ -15,21 +15,20 @@ TileList::~TileList()
 void TileList::addTile(const Tile& tile)
 {
 	if (size == capacity) {
-		tiles = expandArray(tiles);
-	} else {
-		tiles[size] = tile;
-		++size;
+		expandArray();
 	}
+    tiles[size] = tile;
+    ++size;
 }
 
-Tile* TileList::expandArray(Tile*& oldArray) {
+void TileList::expandArray() {
 	capacity *= 2;
 	Tile* newTiles = new Tile[capacity];
 	for (int i = 0; i < size; ++i) { // since size = old capacity
-		newTiles[i] = oldArray[i];
+		newTiles[i] = tiles[i];
 	}
-	delete[] oldArray;
-	return newTiles;
+	delete[] tiles;
+    tiles = newTiles;
 }
 
 void TileList::drawAll(QGraphicsScene* scene) const

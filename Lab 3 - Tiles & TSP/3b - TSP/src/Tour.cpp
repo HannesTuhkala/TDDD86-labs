@@ -153,15 +153,17 @@ void Tour::insertSmallest(const Point& p)
         // iterate every node in the linked list and put in the new node and see distance for each one
         do {
             // add the node to the current position
-            Node* newNode = new Node(p, currentNode->next);
-            currentNode->next = newNode;
+            //Node* newNode = new Node(p, currentNode->next);
+            //currentNode->next = newNode;
 
             // get distance
-            currentDistance = distance();
+            currentDistance = p.distanceTo(currentNode->point) + 
+                p.distanceTo(currentNode->next->point) -
+                currentNode->point.distanceTo(currentNode->next->point);
 
             // take away the node
-            currentNode->next = newNode->next;
-            newNode->next = nullptr;
+            //currentNode->next = newNode->next;
+            //newNode->next = nullptr;
 
             // if we got a better distance overall then this is our best node.
             if (currentDistance < lowestDistance) {
