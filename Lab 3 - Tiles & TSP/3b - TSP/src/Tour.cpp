@@ -148,7 +148,7 @@ void Tour::insertSmallest(const Point& p)
         // iterate every node in the linked list and put in the new node and see distance for each one
         do {
             // add the node to the current position
-            Node* newNode = new Node(p, currentNode->next);
+            Node* newNode = Node(p, currentNode->next);
             currentNode->next = newNode;
 
             currentDistance = distance();
