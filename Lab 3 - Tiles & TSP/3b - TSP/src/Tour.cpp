@@ -48,8 +48,6 @@ void Tour::draw(QGraphicsScene *scene) const
     // if linked list is empty do nothing.
     if (currentNode == nullptr) {
         return;
-    } else if (currentNode->next == firstNode) { // if only one node just draw it
-        currentNode->point.draw(scene);
     } else { // draw all nodes until we get to the start
         do {
             nextNode = currentNode->next;
