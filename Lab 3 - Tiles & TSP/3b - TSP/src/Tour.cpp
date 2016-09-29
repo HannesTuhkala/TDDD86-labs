@@ -44,7 +44,7 @@ void Tour::draw(QGraphicsScene *scene) const
 {
     Node* currentNode = firstNode;
     Node* nextNode = nullptr;
-
+    scene->clear();
     // if linked list is empty do nothing.
     if (currentNode == nullptr) {
         return;
@@ -151,10 +151,9 @@ void Tour::insertSmallest(const Point& p)
             Node* newNode = new Node(p, currentNode->next);
             currentNode->next = newNode;
 
-            // get distance
             currentDistance = distance();
 
-            // take away the node
+            // unlink the temporary node
             currentNode->next = newNode->next;
             newNode->next = nullptr;
 

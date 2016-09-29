@@ -15,7 +15,7 @@ TileList::~TileList()
 void TileList::addTile(const Tile& tile)
 {
 	if (size == capacity) {
-		tiles = expandArray(tiles);
+        tiles = expandArray(tiles);
 	} else {
 		tiles[size] = tile;
 		++size;
