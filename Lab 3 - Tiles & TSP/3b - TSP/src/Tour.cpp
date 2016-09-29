@@ -44,7 +44,7 @@ void Tour::draw(QGraphicsScene *scene) const
 {
     Node* currentNode = firstNode;
     Node* nextNode = nullptr;
-
+    scene->clear();
     // if linked list is empty do nothing.
     if (currentNode == nullptr) {
         return;
@@ -65,8 +65,6 @@ int Tour::size() const
     // if linked list is empty it obviously has 0 nodes => size = 0
     if (currentNode == nullptr) {
         return size;
-    } else if (currentNode->next == firstNode) { // if node points to itself => size = 1
-        return ++size;
     }
 
     // go through every node in the linked list and increment size
@@ -147,23 +145,13 @@ void Tour::insertSmallest(const Point& p)
         newNode->next = newNode;
         firstNode = newNode;
     } else {
-        // does the length change if we put the point in the first position?
-        // TODO: look this up!!
-
         // iterate every node in the linked list and put in the new node and see distance for each one
         do {
-            // add the node to the current position
-            //Node* newNode = new Node(p, currentNode->next);
-            //currentNode->next = newNode;
-
             // get distance
             currentDistance = p.distanceTo(currentNode->point) + 
                 p.distanceTo(currentNode->next->point) -
                 currentNode->point.distanceTo(currentNode->next->point);
 
-            // take away the node
-            //currentNode->next = newNode->next;
-            //newNode->next = nullptr;
 
             // if we got a better distance overall then this is our best node.
             if (currentDistance < lowestDistance) {
