@@ -37,8 +37,7 @@ bool hashTableContains(Key key, HashTable* t) {
 }
 
 int numberOfSubsets(unsigned tableSize, unsigned subsetSize) {
-	// TODO hur många delmängder av storlek subsetSize kan man 
-	// bilda ur en tabell med storlek tableSize???
+
 }
 
 /*
@@ -60,7 +59,6 @@ bool isLastSubset(vector<unsigned> currentSubset) {
 //}
 
 int main(int argc, char* argv[]) {
-	// TODO Vi kan nog behöva ändra de här
 	unsigned char buffer[C+1];     // temporary string buffer
 	Key candidate = {{0}};         // a password candidate
 	Key encrypted;                 // the encrypted password
@@ -98,11 +96,6 @@ int main(int argc, char* argv[]) {
 	// increment currentSubset
 	do {
 
-	// TODO här kommer allt sökande
-	// Jag vet inte exakt hur man ska skapa en key med 
-	// så många ettställda bitar som man vill ha. Inte heller 
-	// vet jag hur det är tänkt att man ska kunna. Jag vet inte 
-	// vad jag håller på med längre.
 	
 	} while (!found && !isLastSubset(currentSubset));
 	
