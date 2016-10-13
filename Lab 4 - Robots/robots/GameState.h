@@ -4,6 +4,9 @@
  *
  * Maintains the game state:  Location of all robots, junk and hero.
  * Method isSafe() is used to keep Hero from moving stupidly.
+ *
+ * Edited by Hannes Tuhkala and Malcolm Vigren as part of lab 4 in TDDD86
+ *
  */
 
 #ifndef GAMESTATE_H
