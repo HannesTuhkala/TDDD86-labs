@@ -16,10 +16,11 @@ void printContents(stack<string>& stck);
 bool isValidWord(set<string>& dictionary, string& word);
 bool hasBeenUsed(set<string>& usedWords, string& word);
 void emptyQueue(queue<stack<string>>& queueStack);
-set<string> loadDictionary();
+void loadDictionary(set<string>& dictionary);
 
 int main() {
-    set<string> dictionary = loadDictionary();
+    set<string> dictionary;
+    loadDictionary(dictionary);
     greetUser();
 
     string firstWord, secondWord;
@@ -97,16 +98,13 @@ bool isValidWord(set<string>& dictionary, string& word) {
 /*
  * Loads the dictionary.
  */
-set<string> loadDictionary() {
+void loadDictionary(set<string>& dictionary) {
     ifstream input;
-    set<string> dictionary;
     input.open("dictionary.txt");
     string line;
     while(getline(input, line)) {
         dictionary.insert(line);
     }
-
-    return dictionary;
 }
 
 /*
