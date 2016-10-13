@@ -1,6 +1,6 @@
 /*
  * This is an evil implementation of the hangman game.
- * By Malcolm Vigren (malvi108) and Hannes Tuhklala (hantu447).
+ * By Malcolm J.S. Vigren (malvi108) and Hannes M. Tuhkala (hantu447).
  *
  */
 
@@ -18,50 +18,54 @@ using namespace std;
 
 const string alphabet  = "abcdefghijklmnopqrstuvwxyz";
 
-set<string> loadDictionary();
-array<int, 2> findWordLengths(set<string>& dictionary);
+void loadDictionary(set<string>& dictionary);
+void findWordLengths(set<string>& dictionary, int& min, int& max);
 void hangMan(set<string>& dictionary, int& wordLength, int& guesses, bool& debug);
-set<string> narrowDownDictionary(stack<string> words);
-set<string> narrowDictionaryBasedOnWordLength(set<string> &dictionary, int &wordLength);
+void narrowDownDictionary(stack<string>& words, set<string>& dictionary);
+void narrowDictionaryBasedOnWordLength(set<string>& dictionary, unsigned wordLength);
 void printPossibleWords(set<string> &possibleWords);
 void printWordStatus(int& guessesLeft, string& currentWord, set<char> usedLetters);
 void printGuessStatus(bool guessCorrect);
-map<string, stack<string>> partitionWords(char& letter, set<string>& dictionary, string currentWord);
-pair<string, stack<string>> getLargestPartition(map<string, stack<string>> partitions);
+void partitionWords(char& letter, set<string>& dictionary, string currentWord,
+        map<string, stack<string>>& partitions);
+void getLargestPartition(map<string, stack<string>> partitions, pair<string, stack<string>>& largestPartition);
 string createEmptyWord(int& length);
 void inputLetter(char& letter, set<char>& guessedLetters);
 string getPrintableUsedLetters(set<char> &usedLetters);
 bool matches(string& word, string& wordComparison);
 void printStack(stack<string> st);
 bool allLettersGuessed(string word);
-void inputInfo(int& length, int& guesses, bool& debug, array<int, 2> wordLengths);
+void inputInfo(int& length, int& guesses, bool& debug, int min, int max);
 
 int main() {
-    set<string> dictionary = loadDictionary();
+    set<string> dictionary;
+    loadDictionary(dictionary);
     cout << "Welcome to Hangman." << endl;
 
     int wordLength;
     int guesses;
     bool debug;
 
-    array<int, 2> wordLengths = findWordLengths(dictionary);
+    int max, min;
 
-    inputInfo(wordLength, guesses, debug, wordLengths);
+    findWordLengths(dictionary, min, max);
+
+    inputInfo(wordLength, guesses, debug, min, max);
 
     hangMan(dictionary, wordLength, guesses, debug);
 
     return 0;
 }
 
-void inputInfo(int& length, int& guesses, bool& debug, array<int, 2> wordLengths){
+void inputInfo(int& length, int& guesses, bool& debug, int min, int max) {
     bool validWordLength = false;
     do {
         if (validWordLength) {
-            cout << "The word length has to be between " << wordLengths[0] << " and " << wordLengths[1] << "." << endl;
+            cout << "The word length has to be between " << min << " and " << max << "." << endl;
         }
         cout << "Word length? ";
         cin >> length;
-        validWordLength = (!(length >= wordLengths.at(0) && length <= wordLengths.at(1)));
+        validWordLength = (!(length >= min && length <= max));
     } while (validWordLength);
 
     cout << "Number of guesses? ";
@@ -78,36 +82,29 @@ void inputInfo(int& length, int& guesses, bool& debug, array<int, 2> wordLengths
 /*
  * Loads the dictionary into a set
  */
-set<string> loadDictionary(){
+void loadDictionary(set<string>& dictionary) {
     ifstream input;
-    set<string> dictionary;
     input.open("dictionary.txt");
     string line;
     while(getline(input, line)) {
         dictionary.insert(line);
     }
-
-    return dictionary;
 }
 
 /*
  * Returns an array with the length of the shortest word in the dictionary,
  * and the length of the longest.
  */
-array<int, 2> findWordLengths(set<string>& dictionary) {
-    int longestWord;
-    int shortestWord = longestWord = dictionary.begin()->length();
+void findWordLengths(set<string>& dictionary, int& min, int& max) {
+    max = min = dictionary.begin()->length();
     for (string word : dictionary) {
         int wordLength = word.length();
-        if (wordLength < shortestWord) {
-            shortestWord = wordLength;
-        } else if (wordLength > longestWord) {
-            longestWord = wordLength;
+        if (wordLength < min) {
+            min = wordLength;
+        } else if (wordLength > max) {
+            max = wordLength;
         }
     }
-
-    array<int, 2> wordLengths = {shortestWord, longestWord};
-    return wordLengths;
 }
 
 /*
@@ -115,7 +112,7 @@ array<int, 2> findWordLengths(set<string>& dictionary) {
  */
 void hangMan(set<string>& dictionary, int& wordLength, int& guesses, bool& debug) {
     string word = createEmptyWord(wordLength);
-    dictionary = narrowDictionaryBasedOnWordLength(dictionary, wordLength);
+    narrowDictionaryBasedOnWordLength(dictionary, wordLength);
     bool continueGame = true;
     set<char> usedLetters;
     while (continueGame){
@@ -129,10 +126,12 @@ void hangMan(set<string>& dictionary, int& wordLength, int& guesses, bool& debug
         usedLetters.insert(letter);
 
         // create partitions based on given character
-        map<string, stack<string>> partitions = partitionWords(letter, dictionary, word);
+        map<string, stack<string>> partitions;
+        partitionWords(letter, dictionary, word, partitions);
 
         // this contains the guess with the largest amount of matching words.
-        pair<string, stack<string>> largestPartition = getLargestPartition(partitions);
+        pair<string, stack<string>> largestPartition;
+        getLargestPartition(partitions, largestPartition);
 
         if (largestPartition.first == word){ 
             // this means that the user guessed "incorrectly",
@@ -145,7 +144,9 @@ void hangMan(set<string>& dictionary, int& wordLength, int& guesses, bool& debug
         word = largestPartition.first;
 
         // shrink the dictionary to the words that with the current word
-        dictionary = narrowDownDictionary(largestPartition.second);
+        set<string> newDictionary;
+        narrowDownDictionary(largestPartition.second, newDictionary);
+        dictionary = newDictionary;
         if (guesses == 1){
             cout << "Final guess!" << endl;
         }
@@ -165,7 +166,7 @@ void hangMan(set<string>& dictionary, int& wordLength, int& guesses, bool& debug
 /*
  * Determines whether all letters are guessed based on the current word.
  */
-bool allLettersGuessed(string word){
+bool allLettersGuessed(string word) {
     for (char c : word){
         if (c == '-') return false;
     }
@@ -175,25 +176,24 @@ bool allLettersGuessed(string word){
 /*
  * Finds the largest partition in the map of partitions
  */
-pair<string, stack<string>> getLargestPartition(map<string, stack<string>> partitions){
-    pair<string, stack<string>> largest;
+void getLargestPartition(map<string, stack<string>> partitions, pair<string,
+        stack<string>>& largestPartition) {
     for (auto& currentPair : partitions) {
-        if (currentPair.second.size() > largest.second.size()) {
-            largest = currentPair;
+        if (currentPair.second.size() > largestPartition.second.size()) {
+            largestPartition = currentPair;
         }
     }
-    return largest;
 }
 
 /*
  * Maps every word where the given letter can be placed to every word that matches that
  * word in the dictionary. For example, "---e" would map to words like "make" or "like".
  */
-map<string, stack<string>> partitionWords(char& letter, set<string>& dictionary, string currentWord){
-    map<string, stack<string>> stackMap;
+void partitionWords(char& letter, set<string>& dictionary, string currentWord, map<string, stack<string>>& partitions) {
     for (string word : dictionary){
         stack<string> currentStack;
         string temp;
+
         for (unsigned int position = 0; position < word.length(); ++position) {
             if (word[position] == letter && (currentWord[position] == '-' || currentWord[position] == letter)) {
                 temp += letter;
@@ -203,15 +203,14 @@ map<string, stack<string>> partitionWords(char& letter, set<string>& dictionary,
                 temp += '-';
             }
         }
-        //cout << temp << endl;
-        if (stackMap.count(temp) == 0) {
+
+        if (partitions.count(temp) == 0) {
             currentStack.push(word);
-            stackMap.insert(pair<string, stack<string>>(temp, currentStack));
+            partitions.insert(pair<string, stack<string>>(temp, currentStack));
         } else {
-            stackMap.at(temp).push(word);
+            partitions.at(temp).push(word);
         }
     }
-    return stackMap;
 }
 
 /*
@@ -280,26 +279,24 @@ string getPrintableUsedLetters(set<char>& usedLetters){
 /*
  * Creates a new dictionary with only the words that match the word length
  */
-set<string> narrowDictionaryBasedOnWordLength(set<string>& dictionary, int& wordLength){
+void narrowDictionaryBasedOnWordLength(set<string>& dictionary, unsigned wordLength) {
     set<string> newDictionary;
     for (string word : dictionary) {
         if (word.length() == wordLength) {
             newDictionary.insert(word);
         }
     }
-    return newDictionary;
+    dictionary = newDictionary;
 }
 
 /*
  * Creates a new dictionary from the stack of words
  */
-set<string> narrowDownDictionary(stack<string> words) {
-    set<string> newDictionary;
+void narrowDownDictionary(stack<string>& words, set<string>& dictionary) {
     while(!words.empty()){
-        newDictionary.insert(words.top());
+        dictionary.insert(words.top());
         words.pop();
     }
-    return newDictionary;
 }
 
 /*
