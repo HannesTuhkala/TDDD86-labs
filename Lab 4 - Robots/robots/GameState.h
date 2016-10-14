@@ -29,6 +29,11 @@ public:
     GameState& operator=(const GameState& gs);
 
     /*
+     * Deletes all robots in the robots vector.
+     */
+    GameState::clear();
+
+    /*
      * Clear and redraw entire playing field
      */
     void draw(QGraphicsScene* scene) const;	// Clear and redraw entire playing field

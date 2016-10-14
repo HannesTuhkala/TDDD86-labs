@@ -28,6 +28,10 @@ GameState::GameState(int numberOfRobots) {
 }
 
 GameState::~GameState() {
+    this->clear();
+}
+
+GameState::clear() {
     for (Robot* robot : robots) {
         delete robot;
     }
@@ -43,11 +47,7 @@ GameState& GameState::operator=(const GameState& gs) {
     if (this != &gs) {
         this->hero = gs.hero;
 
-        for (Robot* robot : robots) {
-            delete robot;
-        }
-
-        robots.clear();
+        this->clear();
 
         for (Robot* robot : gs.robots) {
             Robot* temp = new Robot(*robot);
@@ -60,9 +60,11 @@ GameState& GameState::operator=(const GameState& gs) {
 
 void GameState::draw(QGraphicsScene *scene) const {
     scene->clear();
+
     for (size_t i = 0; i < robots.size(); ++i) {
         robots[i]->draw(scene);
     }
+
     hero.draw(scene);
 }
 
