@@ -40,17 +40,19 @@ class Board {
 	/*
 	 * Gets the indices of all neighbors to the given index.
 	*/
-	std::vector<std::pair<int,int>> getNeighbors(int row, int col) const;
+	void getNeighbors(const int row, const int col, 
+            std::vector<std::pair<int, int>>& neighbors) const;
 	/*
 	 * Gets possible starting points for backtracking algorithm. Returns a vector of
 	 * indices where the given char is found.
 	 */
-	std::vector<std::pair<int,int>> getPossibleStartingPoints(char c) const;
+    void getPossibleStartingPoints(const char c, 
+            std::vector<std::pair<int,int>>& startingPoints) const;
 	
 	/*
 	 * Gets indices for ALL of the board's cubes.
 	 */
-	std::vector<std::pair<int,int>> getAllStartingPoints() const;
+	void getAllStartingPoints(std::vector<std::pair<int,int>>& startingPoints) const;
 
 	static const int BOARD_SIZE = 4;
 
@@ -59,7 +61,7 @@ class Board {
 	Checks whether the char given is a neighbor to the given index, or if it is
 	equal to the char of the given index.
 	*/
-	bool isNeighbor(int row, int col, char c) const;
+	bool isNeighbor(const int row, const int col, const char c) const;
 	/*
 	Shuffles the board.
 	*/
