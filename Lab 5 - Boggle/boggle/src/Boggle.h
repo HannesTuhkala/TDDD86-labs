@@ -72,21 +72,26 @@ public:
 	 */
 	void playComputerTurn();
 	/*
-	 * Returns the computerWords-field.
-	 */
-	vector<string> getComputerWords() const;
-	/*
 	 * Returns the computerScore-field.
 	 */
 	unsigned int getComputerScore() const;
 	/*
-	 * Returns the userWords-field.
-	 */
-	vector<string> getUserWords() const;
-	/*
 	 * Returns the userScore-field.
 	 */
 	unsigned int getUserScore() const;
+    /*
+     * Returns the word at the given index, from the user words
+     * (computer = false) or the computer words (computer = true)
+     */
+    string wordAt(const unsigned int index, const bool computer) const;
+    /*
+     * Returns the amount of words in the user words list.
+     */
+    unsigned int userWordsSize() const;
+    /*
+     * Returns the amount of words in the computer words list.
+     */
+    unsigned int computerWordsSize() const;
 
 private:
 

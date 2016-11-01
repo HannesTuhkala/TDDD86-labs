@@ -16,7 +16,7 @@ void clearConsole();
 void playOneGame(Boggle& boggle);
 void inputCustomSides(Boggle& boggle);
 void printWords(Boggle& boggle, bool computer);
-vector<string> createSides(string& ans);
+void createSides(string& ans, vector<string>& sides);
 void enterWord(Boggle& boggle);
 void printScore(unsigned int score);
 bool randomBoard();
@@ -37,10 +37,10 @@ void playOneGame(Boggle& boggle) {
 	cout << "It's your turn!" << endl;
 	cin.ignore();
 	enterWord(boggle);
-	//computer's turn
+	// computer's turn
 	cout << "It's my turn!" << endl;
 	boggle.playComputerTurn();
-	cout << boggle.boardToString() << endl;
+	// cout << boggle.boardToString() << endl;
 	printWords(boggle, true);
 	unsigned int computerScore = boggle.getComputerScore();
 	unsigned int userScore = boggle.getUserScore();
@@ -63,11 +63,13 @@ void enterWord(Boggle& boggle) {
 		cout << "Type a word (or press Enter to end your turn): ";
 		string word;
 		getline(cin, word);
-		clearConsole();
 		word = toUpperCase(word);
 		if (word.empty()) {
-			return;
-		} else if (!boggle.isCorrectFormat(word)) {
+            cout << endl;
+            return;
+        }
+		clearConsole();
+		if (!boggle.isCorrectFormat(word)) {
 			cout << "Please type a word with at least 4 alpha characters." << endl;
 		} else if (!boggle.isValidEnglishWord(word)) {
 			cout << "Please type a valid English word." << endl;
@@ -88,22 +90,21 @@ void printScore(unsigned int score) {
 
 void printWords(Boggle& boggle, bool computer) {
 	string fw;
-	vector<string> words;
+	int size;
 	if (computer) {
 		fw = "My";
-		words = boggle.getComputerWords();
+        size = boggle.computerWordsSize();
 	}
 	else { 
 		fw = "Your";
-		words = boggle.getUserWords();
+        size = boggle.userWordsSize();
 	}
-	int size = words.size();
 	cout << fw << " words (" << size << "): {";
 	for (int i = 0; i < size - 1; ++i) {
-		cout << "\"" << words[i] << "\", ";
+		cout << "\"" << boggle.wordAt(i, computer) << "\", ";
 	}
 	if (size != 0) {
-		cout << "\"" << words.back() << "\"}" << endl;
+		cout << "\"" << boggle.wordAt(size - 1, computer) << "\"}" << endl;
 	} else {
 		cout << "}" << endl;
 	}
@@ -123,16 +124,16 @@ void inputCustomSides(Boggle& boggle) {
 		} else break;
 	}
 	ans = toUpperCase(ans);
-	boggle.insertCustomCubes(createSides(ans));
+    vector<string> sides;
+    createSides(ans, sides);
+	boggle.insertCustomCubes(sides);
 }
 
-vector<string> createSides(string& ans) {
-	vector<string> sides;
+void createSides(string& ans, vector<string>& sides) {
 	sides.resize(NUM_CUBES);
 	for (unsigned int i = 0; i < NUM_CUBES; ++i) {
 		sides[i] = ans[i]; 
 	}
-	return sides;
 }
 
 bool isAlpha(string& text) {

@@ -182,12 +182,20 @@ bool Boggle::isAlpha(const string& text) const {
 	return true;
 }
 
-vector<string> Boggle::getComputerWords() const {
-	return computerWords;
+string Boggle::wordAt(const unsigned int index, const bool computer) const {
+    if (computer) {
+        return computerWords[index];
+    } else {
+        return userWords[index];
+    }
 }
 
-vector<string> Boggle::getUserWords() const {
-	return userWords;
+unsigned int Boggle::userWordsSize() const {
+    return userWords.size();
+}
+
+unsigned int Boggle::computerWordsSize() const {
+    return computerWords.size();
 }
 
 unsigned int Boggle::getComputerScore() const {
