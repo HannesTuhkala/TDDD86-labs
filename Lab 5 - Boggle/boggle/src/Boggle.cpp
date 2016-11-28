@@ -129,7 +129,8 @@ bool Boggle::checkValidWordHelp(string word, pair<int,int> currIndex) {
 
 	//Else, if the first letter of the word matches the index of the current character and has not
 	//already been checked:
-	if (word[0] == board.cubeSideAt(currRow, currCol) && !board.isVisited(currRow, currCol)){
+	if (word[0] == board.cubeSideAt(currRow, currCol) && 
+            !board.isVisited(currRow, currCol)){
 		//We are now checking this character in the board, so mark it as visited.
 		board.setVisited(currRow, currCol, true);
 		//remove the first character of the word.
