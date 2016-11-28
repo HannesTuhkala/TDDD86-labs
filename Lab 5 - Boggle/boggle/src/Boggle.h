@@ -120,7 +120,7 @@ private:
 	/*
 	 * Uses backtracking algorithm to find all possible valid English words in the board.
 	 */
-	vector<string> getAllRemainingWords();
+	void getAllRemainingWords(vector<string>& foundWords);
 
 };
 

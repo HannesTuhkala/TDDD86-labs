@@ -82,34 +82,33 @@ char Board::cubeSideAt(const unsigned int row, const unsigned int col) const {
 	return cubes[row][col].sideUp();
 }
 
-std::vector<std::pair<int,int>> Board::getNeighbors(int row, int col) const {
-	std::vector<std::pair<int,int>> indices;
+void Board::getNeighbors(int row, int col, 
+        std::vector<std::pair<int,int>>& neighbors) const {
 	for (int r = row - 1; r <= row + 1; ++r) {
 		for (int c = col - 1; c <= col + 1; ++c) {
 			if (cubes.inBounds(r, c)) {
-				indices.push_back(std::pair<int,int>(r,c));
+				neighbors.push_back(std::pair<int,int>(r,c));
 			}
 		}
 	}
-	return indices;
 }
 
-std::vector<std::pair<int, int>> Board::getPossibleStartingPoints(char c) const {
-	std::vector<std::pair<int,int>> indices;
+void Board::getPossibleStartingPoints(char c,
+        std::vector<std::pair<int, int>>& startingPoints) const {
 	for (int i = 0; i < BOARD_SIZE; ++i) {
 		for (int j = 0; j < BOARD_SIZE; ++j) {
-			if (cubes[i][j].sideUp() == c) indices.push_back(pair<int,int>(i,j));
+			if (cubes[i][j].sideUp() == c) {
+                startingPoints.push_back(pair<int,int>(i,j));
+            } 
 		}
 	}
-	return indices;
 }
 
-std::vector<std::pair<int,int>> Board::getAllStartingPoints() const {
-	std::vector<std::pair<int,int>> indices;
+void Board::getAllStartingPoints(
+        std::vector<std::pair<int,int>>& startingPoints) const {
 	for (int i = 0; i < BOARD_SIZE; ++i) {
 		for (int j = 0; j < BOARD_SIZE; ++j) {
-			indices.push_back(pair<int,int>(i,j));
+			startingPoints.push_back(pair<int,int>(i,j));
 		}
 	}
-	return indices;
 }

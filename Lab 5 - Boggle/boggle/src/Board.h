@@ -38,19 +38,23 @@ class Board {
 	 */
 	char cubeSideAt(const unsigned int row, const unsigned int col) const;
 	/*
-	 * Gets the indices of all neighbors to the given index.
+	 * Gets the indices of all neighbors to the given index, and
+     * puts them in the given neighbors-vector.
 	*/
-	std::vector<std::pair<int,int>> getNeighbors(int row, int col) const;
+	void getNeighbors(int row, int col,
+            std::vector<std::pair<int,int>>& neighbors) const;
 	/*
 	 * Gets possible starting points for backtracking algorithm. Returns a vector of
 	 * indices where the given char is found.
 	 */
-	std::vector<std::pair<int,int>> getPossibleStartingPoints(char c) const;
+	void getPossibleStartingPoints(char c,
+            std::vector<std::pair<int,int>>& startingPoints) const;
 	
 	/*
 	 * Gets indices for ALL of the board's cubes.
 	 */
-	std::vector<std::pair<int,int>> getAllStartingPoints() const;
+	void getAllStartingPoints(
+            std::vector<std::pair<int,int>>& startingPoints) const;
 
 	static const int BOARD_SIZE = 4;
 
