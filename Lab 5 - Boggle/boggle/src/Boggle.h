@@ -118,9 +118,10 @@ private:
 								const pair<int,int>& currentIndex,
 								vector<string>& foundWords);
 	/*
-	 * Uses backtracking algorithm to find all possible valid English words in the board.
+	 * Uses backtracking algorithm to find all possible valid English 
+     * words in the board, and puts them in the given foundWords vector.
 	 */
-	vector<string> getAllRemainingWords();
+	void getAllRemainingWords(vector<string>& foundWords);
 
 };
 
