@@ -31,7 +31,7 @@ GameState::~GameState() {
     this->clear();
 }
 
-GameState::clear() {
+void GameState::clear() {
     for (Robot* robot : robots) {
         delete robot;
     }

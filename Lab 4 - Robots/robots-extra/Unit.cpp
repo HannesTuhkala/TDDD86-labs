@@ -27,8 +27,6 @@ Unit::Unit(const Point& p) {
     y = p.y;
 }
 
-void Unit::draw(QGraphicsScene* scene) const {}
-
 Point Unit::asPoint() const {
     return Point{x, y};
 }

@@ -31,7 +31,7 @@ public:
     /*
      * Deletes all robots in the robots vector.
      */
-    GameState::clear();
+    void clear();
 
     /*
      * Clear and redraw entire playing field
