@@ -7,16 +7,15 @@
 #include "pqueue.h"
 using namespace std;
 
-vector<Node*> DFSHelp(BasicGraph& graph, Vertex* start, Vertex* end) {
+void DFSHelp(BasicGraph& graph, Vertex* start, Vertex* end, vector<Node*>& path) {
 	//mark the start node as visited and green.
 	start->visited = true;
 	start->setColor(GREEN);
 	//if the start equals the end, we have reached the end. Return a 
 	//vector with those two pointers.
 	if (start == end) {
-		vector<Vertex*> path;
 		path.push_back(end);
-		return path;
+		return;
 	} 
 	//if we haven't reached the end, start looking for ways to branch.
 	//Gather all neighbors to the start node.
@@ -24,30 +23,32 @@ vector<Node*> DFSHelp(BasicGraph& graph, Vertex* start, Vertex* end) {
 		Vertex* neighbor = arc->finish;
 		//if it hasn't been visited already...
 		if (!neighbor->visited) {
-			vector<Node*> tempPath = DFSHelp(graph, neighbor, end);
+			vector<Node*> tempPath;
+            DFSHelp(graph, neighbor, end, tempPath);
 			//if the path along this neighbor didn't lead to a dead-end,
 			//the tempPath contains a path to the end. Return this path
 			//with the start node as the first node in the vector.
 			if (!tempPath.empty()) {
-				vector<Vertex*> path;
+				path = vector<Vertex*>();
 				path.push_back(start);
 				for (Vertex* v : tempPath) {
 					path.push_back(v);
 				}
-				return path;
+				return;
 			}
 		}
 	}
 	//if we made it here, either the start node has no neighbors or the neighbors
 	//don't lead us to the end. Return an empty path and mark the node gray.
-    vector<Vertex*> path;
+    path = vector<Vertex*>();
 	start->setColor(GRAY);
-    return path;
 }
 
 vector<Node *> depthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
 	graph.resetData();
-	return DFSHelp(graph, start, end);
+    vector<Node*> path;
+	DFSHelp(graph, start, end, path);
+    return path;
 }
 
 vector<Node *> breadthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
