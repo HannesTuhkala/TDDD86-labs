@@ -36,23 +36,23 @@ HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
 	//start building the tree.
 
 	//create two temporary nodes.
-    HuffmanNode temp1;
-    HuffmanNode temp2;
+    HuffmanNode tempNode1;
+    HuffmanNode tempNode2;
 	//as long as there are two or more nodes in the queue, it means that
 	//not all are yet in the same tree, so keep building it.
 	while (queue.size() >= 2) {
 		//pop the two values at the top of the queue and store in n1, n2.
-        temp1 = queue.top();
+        tempNode1 = queue.top();
 		queue.pop();
-        temp2 = queue.top();
+        tempNode2 = queue.top();
 		queue.pop();
 
 		//sum their frequencies
-        int freqSum = temp1.count + temp2.count;
+        int freqSum = tempNode1.count + tempNode2.count;
         /* create the parent node with the sum of it's children's frequencies
            with n1 as left child (since it has the lowest frequency, as it was
            at the top of the queue) and n2 as the right child.*/
-        HuffmanNode parent = HuffmanNode(NOT_A_CHAR, freqSum, new HuffmanNode(temp1), new HuffmanNode(temp2));
+        HuffmanNode parent = HuffmanNode(NOT_A_CHAR, freqSum, new HuffmanNode(tempNode1), new HuffmanNode(tempNode2));
 
         //push the parent to the queue
 		queue.push(parent);
@@ -209,7 +209,7 @@ void decompress(ibitstream& input, ostream& output) {
 
 void freeTree(HuffmanNode* node) {
     // en version
-    if (node->zero->isLeaf()) {
+    /*if (node->zero->isLeaf()) {
         delete node->zero;
     } else {
         freeTree(node->zero);
@@ -218,6 +218,15 @@ void freeTree(HuffmanNode* node) {
     if (node->one->isLeaf()) {
         delete node->one;
     } else {
+        freeTree(node->one);
+    }*/
+
+    if (node == nullptr) {
+        return;
+    } else if (node->isLeaf()) {
+        delete node;
+    } else {
+        freeTree(node->zero);
         freeTree(node->one);
     }
 
