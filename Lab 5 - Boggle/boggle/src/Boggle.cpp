@@ -45,7 +45,8 @@ std::string Boggle::boardToString() const {
 
 bool Boggle::isValidWord(const string word) {
 	char c = word.front();
-	vector<pair<int,int>> startingPoints = board.getPossibleStartingPoints(c);
+	vector<pair<int,int>> startingPoints;
+    board.getPossibleStartingPoints(c, startingPoints);
 	for (pair<int,int> index : startingPoints) {
 		if (checkValidWordHelp(word, index)) return true;
 	}
@@ -60,17 +61,16 @@ bool Boggle::isCorrectFormat(const string& word) const {
 	return isAlpha(word) && word.size() >= MIN_WORD_LENGTH;
 }
 
-vector<string> Boggle::getAllRemainingWords() {
-	vector<string> foundWords;
+void Boggle::getAllRemainingWords(vector<string>& foundWords) {
 	//since the backtracking algorithm needs more parameters for the recursion
 	//to work, a help function is made to start at every character in the board.
-	vector<pair<int,int>> startingPoints = board.getAllStartingPoints();
+	vector<pair<int,int>> startingPoints;
+    board.getAllStartingPoints(startingPoints);
 	for (pair<int,int> startingPoint : startingPoints) {
 		string startingWord = "";
 		startingWord += board.cubeSideAt(startingPoint.first, startingPoint.second);
 		getAllRemainingWordsHelp(startingWord, startingPoint, foundWords);
 	}
-	return foundWords;
 }
 
 void Boggle::getAllRemainingWordsHelp(const string& currentWord,
@@ -96,7 +96,8 @@ void Boggle::getAllRemainingWordsHelp(const string& currentWord,
 		//we mark the current character as visited.
 		board.setVisited(currRow, currCol, true);
 		//We gather all neighbors to the current character.
-		vector<pair<int,int>> neighbors = board.getNeighbors(currRow, currCol);
+		vector<pair<int,int>> neighbors;
+        board.getNeighbors(currRow, currCol, neighbors);
 		//For every neighboring character...
 		for (pair<int,int> neighbor : neighbors) {
 			int neighRow = neighbor.first;
@@ -128,13 +129,15 @@ bool Boggle::checkValidWordHelp(string word, pair<int,int> currIndex) {
 
 	//Else, if the first letter of the word matches the index of the current character and has not
 	//already been checked:
-	if (word[0] == board.cubeSideAt(currRow, currCol) && !board.isVisited(currRow, currCol)){
+	if (word[0] == board.cubeSideAt(currRow, currCol) && 
+            !board.isVisited(currRow, currCol)){
 		//We are now checking this character in the board, so mark it as visited.
 		board.setVisited(currRow, currCol, true);
 		//remove the first character of the word.
 		string restWord = word.substr(1, word.size() - 1);
 		//get the indices of all neighbors to the current character
-		vector<pair<int,int>> neighbors = board.getNeighbors(currRow, currCol);
+		vector<pair<int,int>> neighbors;
+        board.getNeighbors(currRow, currCol, neighbors);
 		//for every neighbor...
 		for (pair<int,int> neighbor : neighbors) {
 			//check if the substring when taken along the path of the neighbor is valid.
@@ -162,7 +165,7 @@ bool Boggle::isAlreadyUsed(const string& word) const {
 }
 
 void Boggle::playComputerTurn() {
-	computerWords = getAllRemainingWords();
+	getAllRemainingWords(computerWords);
 	for (string word : computerWords) {
 		computerScore += word.size() - MIN_WORD_LENGTH + 1;
 	}
