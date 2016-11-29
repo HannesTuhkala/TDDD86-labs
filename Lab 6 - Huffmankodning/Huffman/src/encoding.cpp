@@ -79,12 +79,6 @@ map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
 
 void writeCode(string& code, obitstream& output) {
 	for (size_t i = 0; i < code.size(); ++i) {
-        /*if (code[i] == '1') {
-			output.writeBit(1);
-		} else {
-			output.writeBit(0);
-        }*/
-
         (code[i] == '1') ? output.writeBit(1) : output.writeBit(0);
 	}
 }
@@ -106,13 +100,6 @@ int getCharacter(ibitstream& input, HuffmanNode* tree) {
 	if (tree->isLeaf()) return tree->character;
 
     int bit = input.readBit();
-
-    /*if (bit == 1) {
-        return getCharacter(input, tree->one);
-    } else  {
-        return getCharacter(input, tree->zero);
-    }*/
-
     return (bit == 1) ? getCharacter(input, tree->one) : getCharacter(input, tree->zero);
 }
 
@@ -197,6 +184,7 @@ map<int, int> readHeader(istream& input) {
         // gets a whitespace ' '
         input.get();
     }
+
 	return freqTable;
 }
 
@@ -208,37 +196,13 @@ void decompress(ibitstream& input, ostream& output) {
 }
 
 void freeTree(HuffmanNode* node) {
-    // en version
-    /*if (node->zero->isLeaf()) {
-        delete node->zero;
-    } else {
-        freeTree(node->zero);
-    }
-
-    if (node->one->isLeaf()) {
-        delete node->one;
-    } else {
-        freeTree(node->one);
-    }*/
-
     if (node == nullptr) {
         return;
-    } else if (node->isLeaf()) {
-        delete node;
-    } else {
+    } else if (node->zero != nullptr) {
         freeTree(node->zero);
+    } else {
         freeTree(node->one);
     }
-
-    // en annan version
-    //if (node == nullptr) {
-    //    return;
-    //} else if (node->isLeaf()) {
-    //    delete node;
-    //} else {
-    //    freeTree(node->zero);
-    //    freeTree(node->one);
-    //}
 
     delete node;
 }
