@@ -38,21 +38,25 @@ class Board {
 	 */
 	char cubeSideAt(const unsigned int row, const unsigned int col) const;
 	/*
-	 * Gets the indices of all neighbors to the given index.
+	 * Gets the indices of all neighbors to the given index, and
+     * puts them in the given neighbors-vector.
 	*/
 	void getNeighbors(const int row, const int col, 
             std::vector<std::pair<int, int>>& neighbors) const;
 	/*
-	 * Gets possible starting points for backtracking algorithm. Returns a vector of
+	 * Gets possible starting points for backtracking algorithm.
+     * Puts them in the given vector of
 	 * indices where the given char is found.
 	 */
-    void getPossibleStartingPoints(const char c, 
+	void getPossibleStartingPoints(const char c,
             std::vector<std::pair<int,int>>& startingPoints) const;
 	
 	/*
-	 * Gets indices for ALL of the board's cubes.
+	 * Gets indices for ALL of the board's cubes and puts them in
+     * the given vector.
 	 */
-	void getAllStartingPoints(std::vector<std::pair<int,int>>& startingPoints) const;
+	void getAllStartingPoints(
+            std::vector<std::pair<int,int>>& startingPoints) const;
 
 	static const int BOARD_SIZE = 4;
 
@@ -67,7 +71,7 @@ class Board {
 	*/
 	void shuffleBoard();
 	/*
-	The cubes
+	The cubes.
 	*/
 	Grid<Cube> cubes;
 

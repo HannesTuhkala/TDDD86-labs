@@ -61,8 +61,7 @@ bool Boggle::isCorrectFormat(const string& word) const {
 	return isAlpha(word) && word.size() >= MIN_WORD_LENGTH;
 }
 
-vector<string> Boggle::getAllRemainingWords() {
-	vector<string> foundWords;
+void Boggle::getAllRemainingWords(vector<string>& foundWords) {
 	//since the backtracking algorithm needs more parameters for the recursion
 	//to work, a help function is made to start at every character in the board.
 	vector<pair<int,int>> startingPoints;
@@ -72,7 +71,6 @@ vector<string> Boggle::getAllRemainingWords() {
 		startingWord += board.cubeSideAt(startingPoint.first, startingPoint.second);
 		getAllRemainingWordsHelp(startingWord, startingPoint, foundWords);
 	}
-	return foundWords;
 }
 
 void Boggle::getAllRemainingWordsHelp(const string& currentWord,
@@ -131,7 +129,8 @@ bool Boggle::checkValidWordHelp(string word, pair<int,int> currIndex) {
 
 	//Else, if the first letter of the word matches the index of the current character and has not
 	//already been checked:
-	if (word[0] == board.cubeSideAt(currRow, currCol) && !board.isVisited(currRow, currCol)){
+	if (word[0] == board.cubeSideAt(currRow, currCol) && 
+            !board.isVisited(currRow, currCol)){
 		//We are now checking this character in the board, so mark it as visited.
 		board.setVisited(currRow, currCol, true);
 		//remove the first character of the word.
@@ -166,7 +165,7 @@ bool Boggle::isAlreadyUsed(const string& word) const {
 }
 
 void Boggle::playComputerTurn() {
-	computerWords = getAllRemainingWords();
+	getAllRemainingWords(computerWords);
 	for (string word : computerWords) {
 		computerScore += word.size() - MIN_WORD_LENGTH + 1;
 	}
@@ -186,12 +185,20 @@ bool Boggle::isAlpha(const string& text) const {
 	return true;
 }
 
-vector<string> Boggle::getComputerWords() const {
-	return computerWords;
+string Boggle::wordAt(const unsigned int index, const bool computer) const {
+    if (computer) {
+        return computerWords[index];
+    } else {
+        return userWords[index];
+    }
 }
 
-vector<string> Boggle::getUserWords() const {
-	return userWords;
+unsigned int Boggle::userWordsSize() const {
+    return userWords.size();
+}
+
+unsigned int Boggle::computerWordsSize() const {
+    return computerWords.size();
 }
 
 unsigned int Boggle::getComputerScore() const {

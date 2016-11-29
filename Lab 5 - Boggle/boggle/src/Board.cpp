@@ -93,16 +93,19 @@ void Board::getNeighbors(const int row, const int col,
 	}
 }
 
-void Board::getPossibleStartingPoints(const char c, 
-        std::vector<std::pair<int,int>>& startingPoints) const {
+void Board::getPossibleStartingPoints(const char c,
+        std::vector<std::pair<int, int>>& startingPoints) const {
 	for (int i = 0; i < BOARD_SIZE; ++i) {
 		for (int j = 0; j < BOARD_SIZE; ++j) {
-			if (cubes[i][j].sideUp() == c) startingPoints.push_back(pair<int,int>(i,j));
+			if (cubes[i][j].sideUp() == c) {
+                startingPoints.push_back(pair<int,int>(i,j));
+            } 
 		}
 	}
 }
 
-void Board::getAllStartingPoints(std::vector<std::pair<int,int>>& startingPoints) const {
+void Board::getAllStartingPoints(
+        std::vector<std::pair<int,int>>& startingPoints) const {
 	for (int i = 0; i < BOARD_SIZE; ++i) {
 		for (int j = 0; j < BOARD_SIZE; ++j) {
 			startingPoints.push_back(pair<int,int>(i,j));

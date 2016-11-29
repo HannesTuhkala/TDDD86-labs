@@ -1,6 +1,12 @@
+/*
+ * This is our implementation of encoding files using Huffmancoding.
+ * By Malcolm Vigren (malvi108) and Hannes Tuhkala (hantu447).
+ *
+ */
+
 #include "encoding.h"
 #include <queue>
-// TODO: include any other headers you need
+
 
 map<int, int> buildFrequencyTable(istream& input) {
     map<int, int> freqTable;
@@ -22,6 +28,7 @@ map<int, int> buildFrequencyTable(istream& input) {
 
 HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
 	std::priority_queue<HuffmanNode> queue;
+
 	//push all character-frequency pairs to the queue.
 	for (auto character : freqTable) {
 		queue.push(HuffmanNode(character.first, character.second));
@@ -29,27 +36,29 @@ HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
 	//start building the tree.
 
 	//create two temporary nodes.
-	HuffmanNode n1;
-	HuffmanNode n2;
+    HuffmanNode tempNode1;
+    HuffmanNode tempNode2;
 	//as long as there are two or more nodes in the queue, it means that
 	//not all are yet in the same tree, so keep building it.
 	while (queue.size() >= 2) {
 		//pop the two values at the top of the queue and store in n1, n2.
-		n1 = queue.top();
+        tempNode1 = queue.top();
 		queue.pop();
-		n2 = queue.top();
+        tempNode2 = queue.top();
 		queue.pop();
 
 		//sum their frequencies
-		int freqSum = n1.count + n2.count;
-		//create the parent node with the sum of it's children's frequencies
-		//with n1 as left child (since it has the lowest frequency, as it was 
-		//at the top of the queue) and n2 as right child
-		HuffmanNode parent = HuffmanNode(NOT_A_CHAR, freqSum, new HuffmanNode(n1), new HuffmanNode(n2));
-		//push the parent to the queue
+        int freqSum = tempNode1.count + tempNode2.count;
+        /* create the parent node with the sum of it's children's frequencies
+           with n1 as left child (since it has the lowest frequency, as it was
+           at the top of the queue) and n2 as the right child.*/
+        HuffmanNode parent = HuffmanNode(NOT_A_CHAR, freqSum, new HuffmanNode(tempNode1), new HuffmanNode(tempNode2));
+
+        //push the parent to the queue
 		queue.push(parent);
 	}
-	return new HuffmanNode(queue.top());
+
+    return new HuffmanNode(queue.top());
 }
 
 void preOrder(HuffmanNode* currentNode, map<int, string>& encodingMap, std::string coding = std::string()) {
@@ -70,42 +79,42 @@ map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
 
 void writeCode(string& code, obitstream& output) {
 	for (size_t i = 0; i < code.size(); ++i) {
-		if (code[i] == '1') {
-			output.writeBit(1);
-		} else {
-			output.writeBit(0);
-		}
+        (code[i] == '1') ? output.writeBit(1) : output.writeBit(0);
 	}
 }
 
 void encodeData(istream& input, const map<int, string> &encodingMap, obitstream& output) {
 	int byte = input.get();
+
 	while (byte != -1) {
 		string code = encodingMap.at(byte);
 		writeCode(code, output);
 		byte = input.get();
 	}
+
 	string eofCode = encodingMap.at(PSEUDO_EOF);
 	writeCode(eofCode, output);
 }
 
 int getCharacter(ibitstream& input, HuffmanNode* tree) {
 	if (tree->isLeaf()) return tree->character;
-	int bit = input.readBit();
-	if (bit == 1) return getCharacter(input, tree->one);
-	else return getCharacter(input, tree->zero);
+
+    int bit = input.readBit();
+    return (bit == 1) ? getCharacter(input, tree->one) : getCharacter(input, tree->zero);
 }
 
 void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
 	while (true) {
 		int character = getCharacter(input, encodingTree);
 		if (character == PSEUDO_EOF) return;
+
 		output.put(character);
 	}
 }
 
 void writeHeader(const map<int, int>& freqTable, obitstream& output) {
     output.put('{');
+
     for (map<int, int>::const_iterator it = freqTable.begin(); it != freqTable.end(); ++it) {
         if (it != freqTable.begin()) {
             output.put(',');
@@ -143,40 +152,39 @@ void compress(istream& input, obitstream& output) {
 
 map<int, int> readHeader(istream& input) {
     map<int, int> freqTable;
+
     // Gets the '{'
     input.get();
+
     char byte;
-	cout << "HEJ HEJ NU SKA VI BÖRJA LÄSA HEADERN! DET SKA BLI JÄTTEKUL!" << endl;
     // While the header doesn't end do..
     while ((byte = input.get()) != '}') {
         string key;
-		cout << "1" << endl;
+
         // get each byte until it finds a ':'
         while (byte != ':') {
             key += string(1, byte);
             byte = input.get();
         }
-		cout << "2" << endl;
+
         string freq;
 
         // get each byte until it finds a ',' or a '}'
         while ((byte = input.get()) != ',' && byte != '}') {
             freq += string(1, byte);
         }
-
-		cout << "3" << endl;
 		
         freqTable.insert(make_pair(atoi(key.c_str()), atoi(freq.c_str())));
 
-        // we have to check here, and it is only true if we are at the last element of the header.
+        // checking if we are at the last element of the header
         if (byte == '}') {
             break;
         }
 
-		cout << "4" << endl;
         // gets a whitespace ' '
         input.get();
     }
+
 	return freqTable;
 }
 
@@ -188,32 +196,15 @@ void decompress(ibitstream& input, ostream& output) {
 }
 
 void freeTree(HuffmanNode* node) {
-    // en version
-    if (node->zero->isLeaf()) {
-        delete node->zero;
-    } else {
+    if (node == nullptr) {
+        return;
+    } else if (node->zero != nullptr) {
         freeTree(node->zero);
-    }
-
-    if (node->one->isLeaf()) {
-        delete node->one;
     } else {
         freeTree(node->one);
     }
 
-    // en annan version
-    //if (node == nullptr) {
-    //    return;
-    //} else if (node->isLeaf()) {
-    //    delete node;
-    //} else {
-    //    freeTree(node->zero);
-    //    freeTree(node->one);
-    //}
-
-    cout << "HEJHEJ" << endl;
     delete node;
-    cout << "HEJHEJ2" << endl;
 }
 
 

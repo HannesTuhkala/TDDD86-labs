@@ -72,21 +72,26 @@ public:
 	 */
 	void playComputerTurn();
 	/*
-	 * Returns the computerWords-field.
-	 */
-	vector<string> getComputerWords() const;
-	/*
 	 * Returns the computerScore-field.
 	 */
 	unsigned int getComputerScore() const;
 	/*
-	 * Returns the userWords-field.
-	 */
-	vector<string> getUserWords() const;
-	/*
 	 * Returns the userScore-field.
 	 */
 	unsigned int getUserScore() const;
+    /*
+     * Returns the word at the given index, from the user words
+     * (computer = false) or the computer words (computer = true)
+     */
+    string wordAt(const unsigned int index, const bool computer) const;
+    /*
+     * Returns the amount of words in the user words list.
+     */
+    unsigned int userWordsSize() const;
+    /*
+     * Returns the amount of words in the computer words list.
+     */
+    unsigned int computerWordsSize() const;
 
 private:
 
@@ -113,9 +118,10 @@ private:
 								const pair<int,int>& currentIndex,
 								vector<string>& foundWords);
 	/*
-	 * Uses backtracking algorithm to find all possible valid English words in the board.
+	 * Uses backtracking algorithm to find all possible valid English 
+     * words in the board, and puts them in the given foundWords vector.
 	 */
-	vector<string> getAllRemainingWords();
+	void getAllRemainingWords(vector<string>& foundWords);
 
 };
 
