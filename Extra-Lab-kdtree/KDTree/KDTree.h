@@ -115,13 +115,10 @@ private:
 
     KDNode<N, ElemType>* root_node;
 
-<<<<<<< HEAD
     KDNode<N, ElemType>* find_node(const Point<N>& pt);
 
-=======
     /* Helper function to delete all nodes */
     void freeTree(KDNode<N, ElemType>* node);
->>>>>>> 6c56ae66ad231035da394d404b31b3e5b3afa70d
 };
 
 /** KDTree class implementation details */
