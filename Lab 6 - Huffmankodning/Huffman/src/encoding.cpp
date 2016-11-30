@@ -13,12 +13,16 @@ map<int, int> buildFrequencyTable(istream& input) {
 	int byte;
 	byte = input.get();
 
+    // continue until input end of input, byte == -1
 	while (byte != -1) {
+        /* if new character, insert it into the freqtable, otherwise
+           increment that characer already in the table*/
 		if (freqTable.count(byte) == 0) {
 			freqTable.insert(pair<int,int>(byte, 1));
 		} else {
 			freqTable.at(byte)++;
 		}
+
 		byte = input.get();
 	}
 
@@ -38,6 +42,7 @@ HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
 	//create two temporary nodes.
     HuffmanNode tempNode1;
     HuffmanNode tempNode2;
+
 	//as long as there are two or more nodes in the queue, it means that
 	//not all are yet in the same tree, so keep building it.
 	while (queue.size() >= 2) {
@@ -62,6 +67,7 @@ HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
 }
 
 void preOrder(HuffmanNode* currentNode, map<int, string>& encodingMap, std::string coding = std::string()) {
+    // if leaf, insert the current coding along with the character into the encodingmap.
     if (currentNode->isLeaf()) {
         encodingMap.insert(make_pair(currentNode->character, coding));
     } else {
@@ -78,7 +84,7 @@ map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
 }
 
 void writeCode(string& code, obitstream& output) {
-	for (size_t i = 0; i < code.size(); ++i) {
+    for (size_t i = 0; i < code.size(); ++i) {
         (code[i] == '1') ? output.writeBit(1) : output.writeBit(0);
 	}
 }
@@ -86,6 +92,7 @@ void writeCode(string& code, obitstream& output) {
 void encodeData(istream& input, const map<int, string> &encodingMap, obitstream& output) {
 	int byte = input.get();
 
+    // continue until input end of input, byte == -1
 	while (byte != -1) {
 		string code = encodingMap.at(byte);
 		writeCode(code, output);
@@ -159,7 +166,7 @@ map<int, int> readHeader(istream& input) {
     char byte;
     // While the header doesn't end do..
     while ((byte = input.get()) != '}') {
-        string key;
+        string key;// continue until input ends at byte = -1
 
         // get each byte until it finds a ':'
         while (byte != ':') {
@@ -198,9 +205,8 @@ void decompress(ibitstream& input, ostream& output) {
 void freeTree(HuffmanNode* node) {
     if (node == nullptr) {
         return;
-    } else if (node->zero != nullptr) {
-        freeTree(node->zero);
     } else {
+        freeTree(node->zero);
         freeTree(node->one);
     }
 
