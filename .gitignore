@@ -98,3 +98,4 @@ Makefile*
 # QtCtreator CMake
 CMakeLists.txt.user*
 
+output/
