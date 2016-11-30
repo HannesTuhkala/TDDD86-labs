@@ -43,8 +43,8 @@ HuffmanNode* buildEncodingTree(const map<int, int> &freqTable) {
     HuffmanNode tempNode1;
     HuffmanNode tempNode2;
 
-	//as long as there are two or more nodes in the queue, it means that
-	//not all are yet in the same tree, so keep building it.
+    /* as long as there are two or more nodes in the queue, it means that
+       not all are yet in the same tree, so keep building it. */
 	while (queue.size() >= 2) {
 		//pop the two values at the top of the queue and store in n1, n2.
         tempNode1 = queue.top();
