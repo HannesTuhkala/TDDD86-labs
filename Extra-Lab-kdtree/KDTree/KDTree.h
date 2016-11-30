@@ -121,6 +121,48 @@ size_t KDTree<N, ElemType>::dimension() const {
     return 0;
 }
 
-// TODO: finish the implementation of the rest of the KDTree class
+template <size_t N, typename ElemType>
+size_t KDTree<N, ElemType>::size() const {
+    // TODO implement
+    return 0;
+}
+
+template <size_t N, typename ElemType>
+bool KDTree<N, ElemType>::empty() const {
+    // TODO implement
+    return false;
+}
+
+template <size_t N, typename ElemType>
+bool KDTree<N, ElemType>::contains(const Point<N>& pt) const {
+    // TODO implement
+    return false;
+}
+
+template <size_t N, typename ElemType>
+void KDTree<N, ElemType>::insert(const Point<N>& pt, const ElemType& value) {
+    // TODO implement
+}
+
+template <size_t N, typename ElemType>
+ElemType& KDTree<N, ElemType>::operator[](const Point<N>& pt) {
+    // TODO implement
+}
+
+template <size_t N, typename ElemType>
+ElemType& KDTree<N, ElemType>::at(const Point<N>& pt) {
+    // TODO implement
+}
+
+
+template <size_t N, typename ElemType>
+const ElemType& KDTree<N, ElemType>::at(const Point<N>& pt) const {
+    // TODO implement
+}
+
+template <size_t N, typename ElemType>
+ElemType KDTree<N, ElemType>::kNNValue(const Point<N>& key, size_t k) const {
+    // TODO implement
+}
 
 #endif // KDTREE_INCLUDED
