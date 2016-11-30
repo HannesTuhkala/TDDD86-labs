@@ -1,3 +1,8 @@
+/*
+ * This file is part of an implementation of the Boggle game, by
+ * Malcolm Vigren (malvi108) and Hannes Tuhkala (hantu447).
+ */
+
 #include <cstdlib>
 #include <iostream>
 #include <iomanip>
@@ -26,16 +31,20 @@ unsigned int countComputerScore(vector<string> words);
  * Plays one game of Boggle using the given boggle game state object.
  */
 void playOneGame(Boggle& boggle) {
+
 	clearConsole();
 	boggle.reset();
+
 	if (randomBoard()) {
 		boggle.setDefaultBoard();
 	} else {
 		inputCustomSides(boggle);
 	}
 	clearConsole();
+
 	cout << "It's your turn!" << endl;
 	cin.ignore();
+
 	enterWord(boggle);
 	// computer's turn
 	cout << "It's my turn!" << endl;

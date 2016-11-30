@@ -1,6 +1,10 @@
 /*
-* This is the datastructure for each cube
-*/
+ * This file is part of an implementation of the Boggle game, by
+ * Malcolm Vigren (malvi108) and Hannes Tuhkala (hantu447).
+ *
+ * This is the datastructure for each cube.
+ */
+
 #ifndef CUBE_H
 #define CUBE_H
 #include <string>

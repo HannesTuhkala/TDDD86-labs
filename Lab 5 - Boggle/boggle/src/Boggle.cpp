@@ -1,7 +1,7 @@
-// This is the .cpp file you will edit and turn in.
-// We have provided a minimal skeleton for you,
-// but you must finish it as described in the spec.
-// Also remove these comments here and add your own.
+/*
+ * This file is part of an implementation of the Boggle game, by
+ * Malcolm Vigren (malvi108) and Hannes Tuhkala (hantu447).
+ */
 
 #include <sstream>
 #include "Boggle.h"
@@ -125,7 +125,10 @@ bool Boggle::checkValidWordHelp(string word, pair<int,int> currIndex) {
 	int currCol = currIndex.second;
 	//If there is only one letter in the word, just check and see if it matches the 
 	//character of the current index and if it has been visited.
-	if (word.size() == 1) return word[0] == board.cubeSideAt(currRow, currCol) && !board.isVisited(currRow, currCol);
+	if (word.size() == 1) { 
+        return word[0] == board.cubeSideAt(currRow, currCol) &&
+            !board.isVisited(currRow, currCol);
+    }
 
 	//Else, if the first letter of the word matches the index of the current character and has not
 	//already been checked:

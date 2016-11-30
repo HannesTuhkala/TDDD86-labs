@@ -1,6 +1,9 @@
 /*
-* This is the datastructure that describes a board object.
-*/
+ * This file is part of an implementation of the Boggle game, by
+ * Malcolm Vigren (malvi108) and Hannes Tuhkala (hantu447).
+ *
+ * This is the datastructure that describes a board object.
+ */
 
 #ifndef BOARD_H
 #define BOARD_H

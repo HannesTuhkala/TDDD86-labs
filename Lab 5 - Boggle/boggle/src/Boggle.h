@@ -1,7 +1,7 @@
-// This is the .h file you will edit and turn in.
-// We have provided a minimal skeleton for you,
-// but you must finish it as described in the spec.
-// Also remove these comments here and add your own, as well as on the members.
+/*
+ * This file is part of an implementation of the Boggle game, by
+ * Malcolm Vigren (malvi108) and Hannes Tuhkala (hantu447).
+ */
 
 #ifndef _boggle_h
 #define _boggle_h

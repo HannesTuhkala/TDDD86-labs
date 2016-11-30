@@ -1,3 +1,8 @@
+/*
+ * This file is part of an implementation of the Boggle game, by
+ * Malcolm Vigren (malvi108) and Hannes Tuhkala (hantu447).
+ */
+
 #include "Cube.h"
 #include "random.h"
 
