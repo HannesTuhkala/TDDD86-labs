@@ -115,6 +115,8 @@ private:
 
     KDNode<N, ElemType>* root_node;
 
+    /* Helper function to delete all nodes */
+    void freeTree(KDNode<N, ElemType>* node);
 };
 
 /** KDTree class implementation details */
@@ -127,7 +129,19 @@ KDTree<N, ElemType>::KDTree() {
 
 template <size_t N, typename ElemType>
 KDTree<N, ElemType>::~KDTree() {
-    // TODO: Fill this in.
+    freeTree(root_node);
+}
+
+template <size_t N, typename ElemType>
+void KDTree<N, ElemType>::freeTree(KDNode<N, ElemType>* node) {
+    if (node == nullptr) {
+        return;
+    } else {
+        freeTree(node->left_child);
+        freeTree(node->right_child);
+    }
+
+    delete node;
 }
 
 template <size_t N, typename ElemType>
