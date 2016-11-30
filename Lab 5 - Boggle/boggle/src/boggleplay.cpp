@@ -11,8 +11,6 @@
 #include "lexicon.h"
 #include "bogglemain.h"
 #include "strlib.h"
-#include "Board.h"
-#include "Cube.h"
 #include <cctype>
 
 static const int NUM_CUBES = 16;
