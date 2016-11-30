@@ -20,6 +20,16 @@
 // type std::size_t every time.
 using namespace std;
 
+template <size_t N, typename E> 
+struct KDNode {
+
+    KDNode<N, E>* left_child;
+    KDNode<N, E>* right_child;
+
+    E elements[N];
+
+};
+
 template <size_t N, typename ElemType>
 class KDTree {
 public:
@@ -100,14 +110,19 @@ public:
     ElemType kNNValue(const Point<N>& key, size_t k) const;
 
 private:
-    // TODO: Add implementation details here.
+
+    size_t length;
+
+    KDNode<N, ElemType>* root_node;
+
 };
 
 /** KDTree class implementation details */
 
 template <size_t N, typename ElemType>
 KDTree<N, ElemType>::KDTree() {
-    // TODO: Fill this in.
+    length = 0;
+    root_node = nullptr;
 }
 
 template <size_t N, typename ElemType>
@@ -117,20 +132,17 @@ KDTree<N, ElemType>::~KDTree() {
 
 template <size_t N, typename ElemType>
 size_t KDTree<N, ElemType>::dimension() const {
-    // TODO: Fill this in.
-    return 0;
+    return N;
 }
 
 template <size_t N, typename ElemType>
 size_t KDTree<N, ElemType>::size() const {
-    // TODO implement
-    return 0;
+    return length;
 }
 
 template <size_t N, typename ElemType>
 bool KDTree<N, ElemType>::empty() const {
-    // TODO implement
-    return false;
+    return length == 0;
 }
 
 template <size_t N, typename ElemType>
