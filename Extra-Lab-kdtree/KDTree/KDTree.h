@@ -115,9 +115,17 @@ private:
 
     KDNode<N, ElemType>* root_node;
 
+    KDNode<N, ElemType>* find_node(const Point<N>& pt);
+
 };
 
 /** KDTree class implementation details */
+
+template <size_t N, typename ElemType>
+KDNode<N, ElemType>* find_node(const Point<N>& pt) {
+    
+}
+
 
 template <size_t N, typename ElemType>
 KDTree<N, ElemType>::KDTree() {
