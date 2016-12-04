@@ -122,7 +122,7 @@ private:
     KDNode<N, ElemType>* find_node(const Point<N>& pt, KDNode<N, ElemType>* current_node, int level) const;
 
     /* Helper function to insert a new node into the KDTree */
-    void insert_recursive(const Point <N>& pt, const ElemType value, KDNode<N, ElemType>* current_node, int level);
+    void insert_node_recursive(const Point <N>& pt, const ElemType value, KDNode<N, ElemType>* current_node, int level);
 
     /* Helper function to delete all nodes */
     void freeTree(KDNode<N, ElemType>* node);
@@ -195,12 +195,12 @@ void KDTree<N, ElemType>::insert(const Point<N>& pt, const ElemType& value) {
         root_node = new KDNode<N, ElemType>(pt, value);
         length++;
     } else {
-        insert_recursive(pt, value, root_node, 0);
+        insert_node_recursive(pt, value, root_node, 0);
     }
 }
 
 template <size_t N, typename ElemType>
-void KDTree<N, ElemType>::insert_recursive(const Point <N>& pt, const ElemType value, KDNode<N, ElemType>* current_node, int level) {
+void KDTree<N, ElemType>::insert_node_recursive(const Point <N>& pt, const ElemType value, KDNode<N, ElemType>* current_node, int level) {
     // Incase the point already exists, update its value.
     if (current_node->point == pt) {
         current_node->value = value;
