@@ -20,13 +20,13 @@
 // type std::size_t every time.
 using namespace std;
 
-template <size_t N, typename E> 
+template <size_t N, typename ElemType>
 struct KDNode {
 
-    KDNode<N, E>* left_child;
-    KDNode<N, E>* right_child;
+    KDNode<N, ElemType>* left_child;
+    KDNode<N, ElemType>* right_child;
 
-    E elements[N];
+    ElemType value;
     Point<N> point;
 };
 
@@ -115,7 +115,7 @@ private:
 
     KDNode<N, ElemType>* root_node;
 
-    KDNode<N, ElemType>* find_node(const Point<N>& pt);
+    KDNode<N, ElemType>* find_node(const Point<N>& pt, KDNode<N, ElemType>* current_node, int level) const;
 
     /* Helper function to delete all nodes */
     void freeTree(KDNode<N, ElemType>* node);
@@ -124,7 +124,7 @@ private:
 /** KDTree class implementation details */
 
 template <size_t N, typename ElemType>
-KDNode<N, ElemType>* find_node(const Point<N>& pt, const KDNode<N, E> current_node = root, int level = 0) {
+KDNode<N, ElemType>* find_node(const Point<N>& pt, KDNode<N, ElemType>* current_node, int level) {
     if ((current_node == nullptr) || (current_node == pt)) {
         return current_node;
     } else {
@@ -179,8 +179,7 @@ bool KDTree<N, ElemType>::empty() const {
 
 template <size_t N, typename ElemType>
 bool KDTree<N, ElemType>::contains(const Point<N>& pt) const {
-    // TODO implement
-    return false;
+    return find_node(pt, root_node, 0) != nullptr;
 }
 
 template <size_t N, typename ElemType>
@@ -195,7 +194,13 @@ ElemType& KDTree<N, ElemType>::operator[](const Point<N>& pt) {
 
 template <size_t N, typename ElemType>
 ElemType& KDTree<N, ElemType>::at(const Point<N>& pt) {
-    // TODO implement
+    KDNode<N, ElemType>* node_found = find_node(pt, root_node, 0);
+
+    if (node_found == nullptr) {
+        throw out_of_range("Node was not found!");
+    } else {
+        return node_found->value;
+    }
 }
 
 
