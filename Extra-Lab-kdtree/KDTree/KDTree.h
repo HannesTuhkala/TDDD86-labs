@@ -206,7 +206,13 @@ ElemType& KDTree<N, ElemType>::at(const Point<N>& pt) {
 
 template <size_t N, typename ElemType>
 const ElemType& KDTree<N, ElemType>::at(const Point<N>& pt) const {
-    // TODO implement
+    KDNode<N, ElemType>* node_found = find_node(pt, root_node, 0);
+
+    if (node_found == nullptr) {
+        throw out_of_range("Node was not found!");
+    } else {
+        return node_found->value;
+    }
 }
 
 template <size_t N, typename ElemType>
