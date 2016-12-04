@@ -23,11 +23,14 @@ using namespace std;
 template <size_t N, typename ElemType>
 struct KDNode {
 
+    KDNode(Point<N> point, ElemType value) : point(point), value(value){}
+
     KDNode<N, ElemType>* left_child;
     KDNode<N, ElemType>* right_child;
 
     ElemType value;
     Point<N> point;
+
 };
 
 template <size_t N, typename ElemType>
@@ -115,7 +118,11 @@ private:
 
     KDNode<N, ElemType>* root_node;
 
+    /* Helper function to find the node with Point pt as suggested in the lab */
     KDNode<N, ElemType>* find_node(const Point<N>& pt, KDNode<N, ElemType>* current_node, int level) const;
+
+    /* Helper function to insert a new node into the KDTree */
+    void insert_recursive(const Point <N>& pt, const ElemType value, KDNode<N, ElemType>* current_node, int level);
 
     /* Helper function to delete all nodes */
     void freeTree(KDNode<N, ElemType>* node);
@@ -184,7 +191,22 @@ bool KDTree<N, ElemType>::contains(const Point<N>& pt) const {
 
 template <size_t N, typename ElemType>
 void KDTree<N, ElemType>::insert(const Point<N>& pt, const ElemType& value) {
-    // TODO implement
+    if (root_node = nullptr) {
+        root_node = new KDNode<N, ElemType>(pt, value);
+        length++;
+    } else {
+        insert_recursive(pt, value, root_node, 0);
+    }
+}
+
+template <size_t N, typename ElemType>
+void KDTree<N, ElemType>::insert_recursive(const Point <N>& pt, const ElemType value, KDNode<N, ElemType>* current_node, int level) {
+    // Incase the point already exists, update its value.
+    if (current_node->point == pt) {
+        current_node->value = value;
+    } else {
+        // traverse the KDTree..
+    }
 }
 
 template <size_t N, typename ElemType>
