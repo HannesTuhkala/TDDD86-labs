@@ -27,7 +27,7 @@ struct KDNode {
     KDNode<N, E>* right_child;
 
     E elements[N];
-
+    Point<N> point;
 };
 
 template <size_t N, typename ElemType>
@@ -124,8 +124,18 @@ private:
 /** KDTree class implementation details */
 
 template <size_t N, typename ElemType>
-KDNode<N, ElemType>* find_node(const Point<N>& pt) {
-    
+KDNode<N, ElemType>* find_node(const Point<N>& pt, const KDNode<N, E> current_node = root, int level = 0) {
+    if ((current_node == nullptr) || (current_node == pt)) {
+        return current_node;
+    } else {
+        if (pt[level] < current_node->point[level]) {
+            level = (level + 1) % N;
+            return find_node(pt, current_node->left_child, level);
+        } else {
+            level = (level + 1) % N;
+            return find_node(pt, current_node->right_child, level);
+        }
+    }
 }
 
 
