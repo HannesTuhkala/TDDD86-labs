@@ -11,7 +11,7 @@
 #include <iostream>
 
 Robot::Robot() : Unit() {}
-Robot::Robot(Unit c) : Unit(c) {}
+Robot::Robot(Unit* c) : Unit(c) {}
 
 void Robot::draw(QGraphicsScene *scene) const {
     Point corner = asPoint();
@@ -21,4 +21,15 @@ void Robot::draw(QGraphicsScene *scene) const {
 
 bool Robot::isJunk() const {
 	return false;
+}
+
+bool Robot::attacks(const Unit& u) const {
+    Point p = u.asPoint();
+    return (abs(x - p.x) <= 1 &&
+            abs(y - p.y) <= 1);
+}
+
+bool Robot::at(const Unit& u) const {
+    Point p = u.asPoint();
+    return (x == p.x && y == p.y);
 }

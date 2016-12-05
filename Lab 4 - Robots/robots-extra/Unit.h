@@ -18,7 +18,7 @@
 class Unit {
 public:
     Unit();
-    Unit(const Unit& u);
+    Unit(const Unit* u);
     Unit(const Point& p);
     virtual ~Unit() {}
 
@@ -27,22 +27,12 @@ public:
     */
     Point asPoint() const;
 
-	virtual void draw(QGraphicsScene* scene) const;
-
-    /*
-    * Am I in the same square as u?
-    */
-    bool at(const Unit& u) const;
-
-    /*
-    * Can I catch u in one move?
-    */
-    virtual bool attacks(const Unit& u) const;
+	virtual void draw(QGraphicsScene* scene) const = 0;
 
     /*
     * Take one step closer to u
     */
-    virtual void moveTowards(const Unit& u);
+    virtual void moveTowards(const Point& p);
 
     /*
     * Teleport. Does not check for collision
@@ -52,11 +42,13 @@ public:
     /*
     * Euclidean distance to u
     */
-    double distanceTo(const Unit& u) const;
-private:
+    double distanceTo(const Unit* u) const;
+
+protected:
     int x;  // x position of this unit
     int y;  // y position of this unit
 
+private:
     // private helpers
     void checkBounds();
 };

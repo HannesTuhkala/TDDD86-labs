@@ -15,10 +15,20 @@
 class Robot : public Unit {
 public:
     Robot();
-    Robot(Unit c);
+    Robot(Unit* c);
 	virtual bool isJunk() const;
 
     void draw(QGraphicsScene* scene) const override;
+
+    /*
+    * Am I in the same square as u?
+    */
+    bool at(const Unit& u) const;
+
+    /*
+     * Returns whether the robot can attack u
+     */
+    bool attacks(const Unit& u) const;
 };
 
 #endif // ROBOT_H

@@ -75,7 +75,7 @@ void GameState::teleportHero() {
 
 void GameState::moveRobots() {
     for (unsigned int i = 0; i < robots.size(); i++)
-        robots[i]->moveTowards (hero);
+        robots[i]->moveTowards(hero.asPoint());
 }
 
 int GameState::countCollisions() {
@@ -86,7 +86,7 @@ int GameState::countCollisions() {
         bool collision = (countRobotsAt(*robots[i]) > 1);
         if (collision && !hitJunk) {
             Robot* temp = robots[i];
-            robots[i] = new Junk((*robots[i]));
+            robots[i] = new Junk(robots[i]);
             delete temp;
             numberDestroyed++;
         } else {
@@ -118,7 +118,7 @@ bool GameState::isSafe(const Unit& unit) const {
     return true;
 }
 
-void GameState::moveHeroTowards(const Unit& dir) {
+void GameState::moveHeroTowards(const Point& dir) {
     hero.moveTowards(dir);
 }
 
