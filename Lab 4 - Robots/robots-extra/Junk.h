@@ -16,7 +16,7 @@
 class Junk : public Robot {
 public:
     Junk();
-    Junk(Unit* c);
+    Junk(Unit c);
 	bool isJunk() const override;
 
     bool attacks(const Unit& u) const override;

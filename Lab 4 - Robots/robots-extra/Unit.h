@@ -27,7 +27,7 @@ public:
     */
     Point asPoint() const;
 
-    virtual void draw(QGraphicsScene* scene) const = 0;
+	virtual void draw(QGraphicsScene* scene) const;
 
     /*
     * Am I in the same square as u?
