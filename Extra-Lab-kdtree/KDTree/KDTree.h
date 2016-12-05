@@ -131,8 +131,8 @@ private:
 /** KDTree class implementation details */
 
 template <size_t N, typename ElemType>
-KDNode<N, ElemType>* find_node(const Point<N>& pt, KDNode<N, ElemType>* current_node, int level) {
-    if ((current_node == nullptr) || (current_node == pt)) {
+KDNode<N, ElemType>* KDTree<N, ElemType>::find_node(const Point<N>& pt, KDNode<N, ElemType>* current_node, int level) const {
+    if ((current_node == nullptr) || (current_node->point == pt)) {
         return current_node;
     } else {
         if (pt[level] < current_node->point[level]) {
@@ -191,7 +191,7 @@ bool KDTree<N, ElemType>::contains(const Point<N>& pt) const {
 
 template <size_t N, typename ElemType>
 void KDTree<N, ElemType>::insert(const Point<N>& pt, const ElemType& value) {
-    if (root_node = nullptr) {
+    if (root_node == nullptr) {
         root_node = new KDNode<N, ElemType>(pt, value);
         length++;
     } else {
