@@ -195,7 +195,7 @@ bool KDTree<N, ElemType>::contains(const Point<N>& pt) const {
 
 template <size_t N, typename ElemType>
 void KDTree<N, ElemType>::insert(const Point<N>& pt, const ElemType& value) {
-    if (root_node = nullptr) {
+    if (root_node == nullptr) {
         root_node = new KDNode<N, ElemType>(pt, value);
         length++;
     } else {
