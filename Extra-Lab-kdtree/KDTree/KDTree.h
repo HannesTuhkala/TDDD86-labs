@@ -41,13 +41,13 @@ public:
     // ----------------------------------------------------
     // Constructs an empty KDTree.
     KDTree();
-    
+
     // Destructor: ~KDTree()
     // Usage: (implicit)
     // ----------------------------------------------------
     // Cleans up all resources used by the KDTree.
     ~KDTree();
-    
+
     // KDTree(const KDTree& rhs);
     // KDTree& operator=(const KDTree& rhs);
     // Usage: KDTree<3, int> one = two;
@@ -56,13 +56,13 @@ public:
     // Deep-copies the contents of another KDTree into this one.
     KDTree(const KDTree& rhs);
     KDTree& operator=(const KDTree& rhs);
-    
+
     // size_t dimension() const;
     // Usage: size_t dim = kd.dimension();
     // ----------------------------------------------------
     // Returns the dimension of the points stored in this KDTree.
     size_t dimension() const;
-    
+
     // size_t size() const;
     // bool empty() const;
     // Usage: if (kd.empty())
@@ -71,13 +71,13 @@ public:
     // empty.
     size_t size() const;
     bool empty() const;
-    
+
     // bool contains(const Point<N>& pt) const;
     // Usage: if (kd.contains(pt))
     // ----------------------------------------------------
     // Returns whether the specified point is contained in the KDTree.
     bool contains(const Point<N>& pt) const;
-    
+
     // void insert(const Point<N>& pt, const ElemType& value);
     // Usage: kd.insert(v, "This value is associated with v.");
     // ----------------------------------------------------
@@ -85,7 +85,7 @@ public:
     // value. If the element already existed in the tree, the new value will
     // overwrite the existing one.
     void insert(const Point<N>& pt, const ElemType& value);
-    
+
     // ElemType& operator[](const Point<N>& pt);
     // Usage: kd[v] = "Some Value";
     // ----------------------------------------------------
@@ -93,7 +93,7 @@ public:
     // If the point does not exist, then it is added to the KDTree using the
     // default value of ElemType as its key.
     ElemType& operator[](const Point<N>& pt);
-    
+
     // ElemType& at(const Point<N>& pt);
     // const ElemType& at(const Point<N>& pt) const;
     // Usage: cout << kd.at(v) << endl;
@@ -102,7 +102,7 @@ public:
     // is not in the tree, this function throws an out_of_range exception.
     ElemType& at(const Point<N>& pt);
     const ElemType& at(const Point<N>& pt) const;
-    
+
     // ElemType kNNValue(const Point<N>& key, size_t k) const
     // Usage: cout << kd.kNNValue(v, 3) << endl;
     // ----------------------------------------------------
@@ -119,10 +119,14 @@ private:
     KDNode<N, ElemType>* root_node;
 
     /* Helper function to find the node with Point pt as suggested in the lab */
-    KDNode<N, ElemType>* find_node(const Point<N>& pt, KDNode<N, ElemType>* current_node, int level) const;
+    KDNode<N, ElemType>* find_node(const Point<N>& pt, KDNode<N, ElemType>* current_node, int level = 0) const;
 
     /* Helper function to insert a new node into the KDTree */
     void insert_node_recursive(const Point <N>& pt, const ElemType value, KDNode<N, ElemType>* current_node, int level);
+
+    /* Creates a new KDNode and inserts it into the KDTree. The flag 'side' determines if to put it in as a left child
+     * or as a right child of current_node. side = false => left side. side = true => right side. */
+    void insert_node(KDNode<N, ElemType>* current_node, const Point <N>& pt, const ElemType value, bool side);
 
     /* Helper function to delete all nodes */
     void freeTree(KDNode<N, ElemType>* node);
@@ -191,7 +195,7 @@ bool KDTree<N, ElemType>::contains(const Point<N>& pt) const {
 
 template <size_t N, typename ElemType>
 void KDTree<N, ElemType>::insert(const Point<N>& pt, const ElemType& value) {
-    if (root_node == nullptr) {
+    if (root_node = nullptr) {
         root_node = new KDNode<N, ElemType>(pt, value);
         length++;
     } else {
@@ -205,13 +209,49 @@ void KDTree<N, ElemType>::insert_node_recursive(const Point <N>& pt, const ElemT
     if (current_node->point == pt) {
         current_node->value = value;
     } else {
-        // traverse the KDTree..
+        if (pt[level] < current_node->point[level]) {
+            /* if left child doesnt exist, insert the node here,
+               otherwise continue down the tree from left_child. */
+            if (current_node->left_child == nullptr) {
+                insert_node(current_node, pt, value, false);
+            } else {
+                insert_node_recursive(pt, value, current_node->left_child, (level + 1) % N);
+            }
+        } else {
+            /* if right child doesnt exist, insert the node here,
+               otherwise continue down the tree from right_child. */
+            if (current_node->right_child == nullptr) {
+                insert_node(current_node, pt, value, true);
+            } else {
+                insert_node_recursive(pt, value, current_node->right_child, (level + 1) % N);
+            }
+        }
     }
 }
 
 template <size_t N, typename ElemType>
+void KDTree<N, ElemType>::insert_node(KDNode<N, ElemType>* current_node, const Point <N>& pt, const ElemType value, bool side) {
+    (!side) ? current_node->left_child = new KDNode<N, ElemType>{pt, value} :
+              current_node->right_child = new KDNode<N, ElemType>{pt, value};
+    length++;
+}
+
+template <size_t N, typename ElemType>
 ElemType& KDTree<N, ElemType>::operator[](const Point<N>& pt) {
-    // TODO implement
+    if (root_node == nullptr) {
+        insert(pt, new ElemType());
+        return root_node->point;
+    }
+
+    KDNode<N, ElemType>* found_node = find_node(pt);
+    if (found_node == nullptr) {
+        KDNode<N, ElemType>* new_node = new KDNode<N, ElemType>(pt);
+        insert_node();
+
+        return new_node->value;
+    }
+
+    return found_node->value;
 }
 
 template <size_t N, typename ElemType>
