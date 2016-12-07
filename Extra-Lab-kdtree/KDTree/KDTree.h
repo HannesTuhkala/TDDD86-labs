@@ -23,7 +23,7 @@ using namespace std;
 template <size_t N, typename ElemType>
 struct KDNode {
 
-    KDNode(Point<N> point, ElemType value) : point(point), value(value){}
+    KDNode(Point<N> point, ElemType value) : point(point), value(value), left_child(nullptr), right_child(nullptr){}
 
     KDNode<N, ElemType>* left_child;
     KDNode<N, ElemType>* right_child;
@@ -249,6 +249,9 @@ void KDTree<N, ElemType>::insert_node(KDNode<N, ElemType>* current_node, const P
     (!side) ? current_node->left_child = new KDNode<N, ElemType>{pt, value} :
               current_node->right_child = new KDNode<N, ElemType>{pt, value};
     length++;
+
+    cout << "length: " << length << endl;
+    cout << "point: " << pt.operator [](0) << endl;
 }
 
 template <size_t N, typename ElemType>
