@@ -205,11 +205,8 @@ void KDTree<N, ElemType>::insert(const Point<N>& pt, const ElemType& value) {
     if (root_node == nullptr) {
         root_node = new KDNode<N, ElemType>(pt, value);
         length++;
-        cout << "once" << endl;
     } else {
-        cout << "twice" << endl;
         insert_node_recursive(pt, value, root_node, 0);
-        cout << "thrice" << endl;
     }
 }
 
@@ -217,22 +214,17 @@ template <size_t N, typename ElemType>
 void KDTree<N, ElemType>::insert_node_recursive(const Point <N>& pt, const ElemType value, KDNode<N, ElemType>* current_node, int level) {
     // Incase the point already exists, update its value.
     if (current_node->point == pt) {
-        cout << "uno" << endl;
         current_node->value = value;
     } else {
         if (pt[level] < current_node->point[level]) {
-            cout << "dos" << endl;
             /* if left child doesnt exist, insert the node here,
                otherwise continue down the tree from left_child. */
             if (current_node->left_child == nullptr) {
-                cout << "une" << endl;
                 insert_node(current_node, pt, value, false);
             } else {
-                cout << "deux" << level << endl;
                 insert_node_recursive(pt, value, current_node->left_child, (level + 1) % N);
             }
         } else {
-            cout << "tres" << endl;
             /* if right child doesnt exist, insert the node here,
                otherwise continue down the tree from right_child. */
             if (current_node->right_child == nullptr) {
@@ -249,9 +241,6 @@ void KDTree<N, ElemType>::insert_node(KDNode<N, ElemType>* current_node, const P
     (!side) ? current_node->left_child = new KDNode<N, ElemType>{pt, value} :
               current_node->right_child = new KDNode<N, ElemType>{pt, value};
     length++;
-
-    cout << "length: " << length << endl;
-    cout << "point: " << pt.operator [](0) << endl;
 }
 
 template <size_t N, typename ElemType>

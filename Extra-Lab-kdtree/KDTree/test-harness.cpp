@@ -30,8 +30,8 @@ using namespace std;
 #define ThrowingKDTreeTestEnabled       1
 #define ConstKDTreeTestEnabled          1
 
-#define NearestNeighborTestEnabled      0 // Step two checks
-#define MoreNearestNeighborTestEnabled  0
+#define NearestNeighborTestEnabled      1 // Step two checks
+#define MoreNearestNeighborTestEnabled  1
 
 #define BasicCopyTestEnabled            0 // Step three checks
 #define ModerateCopyTestEnabled         0
