@@ -130,7 +130,7 @@ private:
 
     /* Helper function to traverse the kdtree and add closest points to the bpq */
     void kNN_recursive(KDNode<N, ElemType>* current_node, const Point<N>& key,
-                       BoundedPQueue<ElemType>& bpq, int level);
+                       BoundedPQueue<ElemType>& bpq, int level) const;
 
     /* Helper function to traverse the tree and copy it to a new one */
     KDNode<N, ElemType>* copy_recursive(KDNode<N, ElemType>* current_node);
@@ -304,7 +304,7 @@ ElemType KDTree<N, ElemType>::kNNValue(const Point<N>& key, size_t k) const {
 
 template <size_t N, typename ElemType>
 void KDTree<N, ElemType>::kNN_recursive(KDNode<N, ElemType>* current_node, const Point<N>& key,
-                                        BoundedPQueue<ElemType>& bpq, int level) {
+                                        BoundedPQueue<ElemType>& bpq, int level) const {
     if (current_node == nullptr) {
         return;
     }
