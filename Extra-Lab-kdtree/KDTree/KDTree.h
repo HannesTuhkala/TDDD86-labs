@@ -23,7 +23,7 @@ using namespace std;
 template <size_t N, typename ElemType>
 struct KDNode {
 
-    KDNode(Point<N> point, ElemType value) : point(point), value(value), left_child(nullptr), right_child(nullptr){}
+    KDNode(Point<N> point, ElemType value) : point(point), value(value),left_child(nullptr), right_child(nullptr){}
 
     KDNode<N, ElemType>* left_child;
     KDNode<N, ElemType>* right_child;
@@ -114,8 +114,10 @@ public:
 
 private:
 
+    /* How many elements there are in the KDTree */
     size_t length;
 
+    /* The root node of our KDTree */
     KDNode<N, ElemType>* root_node;
 
     /* Helper function to find the node with Point pt as suggested in the lab */
@@ -244,6 +246,7 @@ template <size_t N, typename ElemType>
 void KDTree<N, ElemType>::insert_node(KDNode<N, ElemType>* current_node, const Point <N>& pt, const ElemType value, bool side) {
     (!side) ? current_node->left_child = new KDNode<N, ElemType>{pt, value} :
               current_node->right_child = new KDNode<N, ElemType>{pt, value};
+
     length++;
 }
 
@@ -261,6 +264,7 @@ ElemType& KDTree<N, ElemType>::operator[](const Point<N>& pt) {
 
 template <size_t N, typename ElemType>
 ElemType& KDTree<N, ElemType>::at(const Point<N>& pt) {
+    // if the point isnt in the kdtree, insert it and return the value
     KDNode<N, ElemType>* node_found = find_node(pt, root_node, 0);
 
     if (node_found == nullptr) {
@@ -287,19 +291,19 @@ ElemType KDTree<N, ElemType>::kNNValue(const Point<N>& key, size_t k) const {
     BoundedPQueue<ElemType> bpq(k);
     kNN_recursive(root_node, key, bpq, 0);
 
-    std::map<ElemType, size_t> frequency_map;
+    std::map<ElemType, size_t> priority_map;
 
     while (!bpq.empty()) {
-        frequency_map[bpq.dequeueMin()]++;
+        priority_map[bpq.dequeueMin()]++;
     }
 
-    ElemType best_element = frequency_map.begin()->first;
-    size_t best_frequency = frequency_map.begin()->second;
+    ElemType best_element = priority_map.begin()->first;
+    size_t best_priority = priority_map.begin()->second;
 
-    for (auto it : frequency_map) {
-        if (it.second > best_frequency) {
+    for (auto it : priority_map) {
+        if (it.second > best_priority) {
             best_element = it.first;
-            best_frequency = it.second;
+            best_priority = it.second;
         }
     }
 
@@ -320,7 +324,7 @@ void KDTree<N, ElemType>::kNN_recursive(KDNode<N, ElemType>* current_node, const
     if (key[level] < current_node->point[level]) {
         kNN_recursive(current_node->left_child, key, bpq, (level + 1) % N);
 
-        /* there are less element in the bpq than the max size we allocated or
+        /* if there are less element in the bpq than the max size we allocated or
            there could be points closer on the other side of the plane (in this case) */
         if (bpq.size() < bpq.maxSize() || isOtherPartPlane(current_node, key, bpq, level)) {
             kNN_recursive(current_node->right_child, key, bpq, (level + 1) % N);
@@ -328,7 +332,7 @@ void KDTree<N, ElemType>::kNN_recursive(KDNode<N, ElemType>* current_node, const
     } else {
         kNN_recursive(current_node->right_child, key, bpq, (level + 1) % N);
 
-        /* there are less element in the bpq than the max size we allocated or
+        /* if there are less element in the bpq than the max size we allocated or
            there could be points closer on the other side of the plane (in this case) */
         if (bpq.size() < bpq.maxSize() || isOtherPartPlane(current_node, key, bpq, level)) {
             kNN_recursive(current_node->left_child, key, bpq, (level + 1) % N);
@@ -343,14 +347,14 @@ bool KDTree<N, ElemType>::isOtherPartPlane(KDNode<N, ElemType>* current_node, co
 }
 
 template <size_t N, typename ElemType>
-KDTree<N, ElemType>::KDTree(const KDTree& other) {
-    *this = other;
+KDTree<N, ElemType>::KDTree(const KDTree& rhs) {
+    *this = rhs;
 }
 
 template <size_t N, typename ElemType>
-KDTree<N, ElemType>& KDTree<N, ElemType>::operator=(const KDTree& other) {
-    root_node = copy_recursive(other.root_node);
-    length = other.length;
+KDTree<N, ElemType>& KDTree<N, ElemType>::operator=(const KDTree& rhs) {
+    root_node = copy_recursive(rhs.root_node);
+    length = rhs.length;
 
     return *this;
 }
