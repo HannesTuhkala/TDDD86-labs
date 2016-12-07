@@ -331,8 +331,8 @@ KDTree<N, ElemType>::KDTree(const KDTree& other) {
 
 template <size_t N, typename ElemType>
 KDTree<N, ElemType>& KDTree<N, ElemType>::operator=(const KDTree& other) {
-    root_node = copy_recursive(other->root_node);
-    length = other->length;
+    this->root_node = copy_recursive(other->root_node);
+    this->length = other->length;
 
     return *this;
 }
