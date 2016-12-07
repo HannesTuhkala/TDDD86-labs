@@ -1,10 +1,12 @@
 /**
  * File: KDTree.h
- * Author: (your name here)
+ * Author: Hannes Tuhkala and Malcolm Vigren
  * ------------------------
  * An interface representing a kd-tree in some number of dimensions. The tree
  * can be constructed from a set of data and then queried for membership and
  * nearest neighbors.
+ *
+ * Edited by Hannes Tuhkala and Malcolm Vigren as part of extra lab 1 in TDDD86
  */
 
 #ifndef KDTREE_INCLUDED

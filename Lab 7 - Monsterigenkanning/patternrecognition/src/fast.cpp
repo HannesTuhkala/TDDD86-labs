@@ -1,3 +1,10 @@
+/*
+ * This is our implementation of faster pattern recognition.
+ * Extra exercise E8.
+ * By Malcolm Vigren (malvi108) and Hannes Tuhkala (hantu447).
+ *
+ */
+
 #include <QApplication>
 #include <QGraphicsView>
 #include <QGraphicsScene>
@@ -47,11 +54,7 @@ struct PointComparison {
 	}
 	
 	bool operator >(const PointComparison &other) const {
-		if (this->slope != other.slope) {
-			return this->slope > other.slope;
-		} else {
-			return *this->thisPoint > *other.thisPoint;
-		}
+		return other < *this;
 	}
 };
 
@@ -102,7 +105,7 @@ int main(int argc, char *argv[]) {
     render_points(scene, points);
     view->scale(1, -1); //screen y-axis is inverted
     view->resize(view->sizeHint());
-    view->setWindowTitle("Fast Pattern Recognition");
+    view->setWindowTitle("Extra Fast Pattern Recognition");
     view->show();
     auto begin = chrono::high_resolution_clock::now();
 	//do all of this using each point as starting point
@@ -125,7 +128,7 @@ int main(int argc, char *argv[]) {
 
 		//start finding collinear lines. Create an index variable.
 		int i = 0;
-		//since we are checking two points ahead, and checking every point except the starting point
+		//since we are checking two points ahead, and checking every point except the starting point,
 		//we check from i = 0 to N-1-2 = N-3.
 		while (i < N - 3) {
 			//get the slopes of this index and the one two indexes away
@@ -133,7 +136,13 @@ int main(int argc, char *argv[]) {
 			double slope2 = comparisons[i + 2].slope;
 			//if they are equal, that means we have found four aligned points (including the startingPoint)!
 			//Lets see if we can find more...
-			if (slope1 == slope2) {
+			//EXTRATASK E8: Because of how the list is sorted, several equal slopes in a row will be sorted
+			//lexicographically, which means that the last of these points will be the upmost right point.
+			//This also means that the starting point is the downmost left point if and only if it follows
+			//the order of the comparison list. That is, only if it is "less" than the first point with equal
+			//slope. Since we only want to draw one single line segment between these lines, we include this
+			//as a condition to draw the line.
+			if (slope1 == slope2 && *comparisons[0].comparePoint < *comparisons[i].thisPoint) {
 				int j = i + 3;
 				while (slope1 == comparisons[j].slope && j < N - 1) {
 					//we found another aligned point!
