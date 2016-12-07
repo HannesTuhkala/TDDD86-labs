@@ -260,7 +260,7 @@ ElemType& KDTree<N, ElemType>::operator[](const Point<N>& pt) {
     KDNode<N, ElemType>* found_node = find_node(pt, root_node, 0);
     if (found_node == nullptr) {
         insert(pt, new ElemType());
-        return find_node(pt, root_node, 0)->point;
+        return find_node(pt, root_node, 0)->value;
     }
 
     return found_node->value;
