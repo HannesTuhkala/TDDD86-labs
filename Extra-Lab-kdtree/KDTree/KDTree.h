@@ -132,6 +132,10 @@ private:
     void kNN_recursive(KDNode<N, ElemType>* current_node, const Point<N>& key,
                        BoundedPQueue<ElemType>& bpq, int level) const;
 
+    /* Returns whether there could be closer nodes in the other side */
+    bool isOtherPartPlane(KDNode<N, ElemType>* current_node, const Point<N>& key,
+                                               BoundedPQueue<ElemType>& bpq, int level) const;
+
     /* Helper function to traverse the tree and copy it to a new one */
     KDNode<N, ElemType>* copy_recursive(KDNode<N, ElemType>* current_node);
 
@@ -314,14 +318,23 @@ void KDTree<N, ElemType>::kNN_recursive(KDNode<N, ElemType>* current_node, const
 
     if (key[level] < current_node->point[level]) {
         kNN_recursive(current_node->left_child, key, bpq, (level + 1) % N);
+
+        if (isOtherPartPlane(current_node, key, bpq, level) || bpq.size() < bpq.maxSize()) {
+            kNN_recursive(current_node->right_child, key, bpq, (level + 1) % N);
+        }
     } else {
         kNN_recursive(current_node->right_child, key, bpq, (level + 1) % N);
-    }
 
-    if (current_node->point[level] - key[level] < bpq.worst() || bpq.size() < bpq.maxSize()) {
-        kNN_recursive(current_node->left_child, key, bpq, (level + 1) % N);
-        kNN_recursive(current_node->right_child, key, bpq, (level + 1) % N);
+        if (isOtherPartPlane(current_node, key, bpq, level) || bpq.size() < bpq.maxSize()) {
+            kNN_recursive(current_node->left_child, key, bpq, (level + 1) % N);
+        }
     }
+}
+
+template <size_t N, typename ElemType>
+bool KDTree<N, ElemType>::isOtherPartPlane(KDNode<N, ElemType>* current_node, const Point<N>& key,
+                                           BoundedPQueue<ElemType>& bpq, int level) const {
+    return (current_node->point[level] - key[level]) < bpq.worst();
 }
 
 template <size_t N, typename ElemType>
