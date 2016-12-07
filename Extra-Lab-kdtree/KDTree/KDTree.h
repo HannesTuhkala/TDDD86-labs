@@ -331,8 +331,8 @@ KDTree<N, ElemType>::KDTree(const KDTree& other) {
 
 template <size_t N, typename ElemType>
 KDTree<N, ElemType>& KDTree<N, ElemType>::operator=(const KDTree& other) {
-    this->root_node = copy_recursive(other->root_node);
-    this->length = other->length;
+    this->root_node = copy_recursive(other.root_node);
+    this->length = other.length;
 
     return *this;
 }
@@ -342,7 +342,7 @@ KDNode<N, ElemType>* KDTree<N, ElemType>::copy_recursive(KDNode<N, ElemType>* cu
     if (current_node == nullptr) {
         return current_node;
     } else {
-        KDNode<N, ElemType> new_node = new KDNode<N, ElemType>(current_node->point, current_node->value);
+        KDNode<N, ElemType>* new_node = new KDNode<N, ElemType>(current_node->point, current_node->value);
 
         new_node->left_child = copy_recursive(current_node->left_child);
         new_node->right_child = copy_recursive(current_node->right_child);
