@@ -155,8 +155,13 @@ void basicKDTreeTest() try {
     {0, 1, 0},
     {0, 0, 1}
   };
+
+  cout << "heyo" << endl;
+
   for (size_t i = 0; i < 3; ++i)
     kd.insert(pointFromRange<3>(dataPoints[i], dataPoints[i] + 3), i);
+
+  cout << "yo" << endl;
 
   /* Check basic properties again. */
   checkCondition(kd.size() == 3, "After adding three elements, KDTree has size 3.");

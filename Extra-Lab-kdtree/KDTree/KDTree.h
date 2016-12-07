@@ -119,7 +119,7 @@ private:
     KDNode<N, ElemType>* root_node;
 
     /* Helper function to find the node with Point pt as suggested in the lab */
-    KDNode<N, ElemType>* find_node(const Point<N>& pt, KDNode<N, ElemType>* current_node, int level = 0) const;
+    KDNode<N, ElemType>* find_node(const Point<N>& pt, KDNode<N, ElemType>* current_node, int level) const;
 
     /* Helper function to insert a new node into the KDTree */
     void insert_node_recursive(const Point <N>& pt, const ElemType value, KDNode<N, ElemType>* current_node, int level);
@@ -128,7 +128,14 @@ private:
      * or as a right child of current_node. side = false => left side. side = true => right side. */
     void insert_node(KDNode<N, ElemType>* current_node, const Point <N>& pt, const ElemType value, bool side);
 
-    /* Helper function to delete all nodes */
+    /* Helper function to traverse the kdtree and add closest points to the bpq */
+    void kNN_recursive(KDNode<N, ElemType>* current_node, const Point<N>& key,
+                       BoundedPQueue<ElemType>& bpq, int level);
+
+    /* Helper function to traverse the tree and copy it to a new one */
+    KDNode<N, ElemType>* copy_recursive(KDNode<N, ElemType>* current_node);
+
+        /* Helper function to delete all nodes */
     void freeTree(KDNode<N, ElemType>* node);
 };
 
@@ -198,8 +205,11 @@ void KDTree<N, ElemType>::insert(const Point<N>& pt, const ElemType& value) {
     if (root_node == nullptr) {
         root_node = new KDNode<N, ElemType>(pt, value);
         length++;
+        cout << "once" << endl;
     } else {
+        cout << "twice" << endl;
         insert_node_recursive(pt, value, root_node, 0);
+        cout << "thrice" << endl;
     }
 }
 
@@ -207,17 +217,22 @@ template <size_t N, typename ElemType>
 void KDTree<N, ElemType>::insert_node_recursive(const Point <N>& pt, const ElemType value, KDNode<N, ElemType>* current_node, int level) {
     // Incase the point already exists, update its value.
     if (current_node->point == pt) {
+        cout << "uno" << endl;
         current_node->value = value;
     } else {
         if (pt[level] < current_node->point[level]) {
+            cout << "dos" << endl;
             /* if left child doesnt exist, insert the node here,
                otherwise continue down the tree from left_child. */
             if (current_node->left_child == nullptr) {
+                cout << "une" << endl;
                 insert_node(current_node, pt, value, false);
             } else {
+                cout << "deux" << level << endl;
                 insert_node_recursive(pt, value, current_node->left_child, (level + 1) % N);
             }
         } else {
+            cout << "tres" << endl;
             /* if right child doesnt exist, insert the node here,
                otherwise continue down the tree from right_child. */
             if (current_node->right_child == nullptr) {
@@ -273,7 +288,75 @@ const ElemType& KDTree<N, ElemType>::at(const Point<N>& pt) const {
 
 template <size_t N, typename ElemType>
 ElemType KDTree<N, ElemType>::kNNValue(const Point<N>& key, size_t k) const {
-    // TODO implement
+    BoundedPQueue<ElemType> bpq(k);
+    kNN_recursive(root_node, key, bpq, 0);
+
+    std::map<ElemType, size_t> frequency_map;
+
+    while (!bpq.empty()) {
+        frequency_map[bpq.dequeueMin()]++;
+    }
+
+    ElemType best_element = frequency_map.begin()->first;
+    size_t best_frequency = frequency_map.begin()->second;
+
+    for (auto it : frequency_map) {
+        if (it.second > best_frequency) {
+            best_element = it.first;
+            best_frequency = it.second;
+        }
+    }
+
+    return best_element;
+}
+
+template <size_t N, typename ElemType>
+void KDTree<N, ElemType>::kNN_recursive(KDNode<N, ElemType>* current_node, const Point<N>& key,
+                                        BoundedPQueue<ElemType>& bpq, int level) {
+    if (current_node == nullptr) {
+        return;
+    }
+
+    // enqueue current point into the bpq
+    bpq.enqueue(current_node->value, Distance(current_node->point, key));
+
+    if (key[level] < current_node->point[level]) {
+        kNN_recursive(current_node->left_child, key, bpq, (level + 1) % N);
+    } else {
+        kNN_recursive(current_node->right_child, key, bpq, (level + 1) % N);
+    }
+
+    if (current_node->point[level] - key[level] < bpq.worst() || bpq.size() < bpq.maxSize()) {
+        kNN_recursive(current_node->left_child, key, bpq, (level + 1) % N);
+        kNN_recursive(current_node->right_child, key, bpq, (level + 1) % N);
+    }
+}
+
+template <size_t N, typename ElemType>
+KDTree<N, ElemType>::KDTree(const KDTree& other) {
+    *this = other;
+}
+
+template <size_t N, typename ElemType>
+KDTree<N, ElemType>& KDTree<N, ElemType>::operator=(const KDTree& other) {
+    root_node = copy_recursive(other->root_node);
+    length = other->length;
+
+    return *this;
+}
+
+template <size_t N, typename ElemType>
+KDNode<N, ElemType>* KDTree<N, ElemType>::copy_recursive(KDNode<N, ElemType>* current_node) {
+    if (current_node == nullptr) {
+        return current_node;
+    } else {
+        KDNode<N, ElemType> new_node = new KDNode<N, ElemType>(current_node->point, current_node->value);
+
+        new_node->left_child = copy_recursive(current_node->left_child);
+        new_node->right_child = copy_recursive(current_node->right_child);
+
+        return new_node;
+    }
 }
 
 #endif // KDTREE_INCLUDED
