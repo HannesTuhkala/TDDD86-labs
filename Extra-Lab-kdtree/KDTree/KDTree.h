@@ -238,17 +238,11 @@ void KDTree<N, ElemType>::insert_node(KDNode<N, ElemType>* current_node, const P
 
 template <size_t N, typename ElemType>
 ElemType& KDTree<N, ElemType>::operator[](const Point<N>& pt) {
-    if (root_node == nullptr) {
-        insert(pt, new ElemType());
-        return root_node->point;
-    }
-
-    KDNode<N, ElemType>* found_node = find_node(pt);
+    // if the point isnt in the kdtree, insert it and return the value
+    KDNode<N, ElemType>* found_node = find_node(pt, root_node, 0);
     if (found_node == nullptr) {
-        KDNode<N, ElemType>* new_node = new KDNode<N, ElemType>(pt);
-        insert_node();
-
-        return new_node->value;
+        insert(pt, new ElemType());
+        return find_node(pt, root_node, 0)->point;
     }
 
     return found_node->value;
