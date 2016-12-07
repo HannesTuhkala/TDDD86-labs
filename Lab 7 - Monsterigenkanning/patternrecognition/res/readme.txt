@@ -34,13 +34,14 @@
  *	loopa genom alla punkter för den fjärde punkten om de tre första 
  *	första punkterna inte ligger på samma linje. Om alla punkter däremot
  *	ligger på samma linje, kommer den alltid att behöva kolla den fjärde
- *	punkten. Detta gör att programmet måste besöka alla kombinationer av 
- *	fyra punkter i filen, alltså nCr(n, 4) besök. Alla andra steg i 
- *	programmet, som sortering och inläsning, tar konstant, linjär 
- *	nlog(n) tid, så dessa kan försummas eftersom nCr(n, 4) växer mycket
+ *	punkten. Detta gör att programmet kör fyra nästlade for-loopar, med
+ *  varje loop som börjar från värdet av variabeln i for-loopen och slutar på
+ *  N - 3 + loopens nivå (0-4), vilket ger komplexiteten O(N^4). Alla andra steg i 
+ *	programmet, som sortering och inläsning, tar konstant, linjär och
+ *	nlog(N) tid, så dessa kan försummas eftersom N^4 växer mycket
  *	snabbare än allt annat.
  *	
- *	Algoritmen ligger därför i O(nCr(n, 4)) i det värsta fallet.
+ *	Algoritmen ligger därför i O(N^4) i det värsta fallet.
  *	
  **********************************************************************
  *	Fast.
@@ -52,10 +53,10 @@
  *	kostar O(nlog(n)) tid. Eftersom den är i den stora for-loopen som itererar
  *	över alla punkter, utförs sorteringen n gånger.
  *	
- *	Algoritmen ligger därför i O(n²log(n)).
+ *	Algoritmen ligger därför i O(N^2log(N)).
  *	
  **********************************************************************/
 
-Brute:
+Brute: O(N^4)
 
-Sortering:
+Sortering: O(N^2log(N))
