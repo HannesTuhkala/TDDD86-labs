@@ -293,13 +293,17 @@ ElemType KDTree<N, ElemType>::kNNValue(const Point<N>& key, size_t k) const {
 
     std::map<ElemType, size_t> priority_map;
 
+    // traverse the bpq and add them into the priority map
     while (!bpq.empty()) {
         priority_map[bpq.dequeueMin()]++;
     }
 
+    // set the current best element to the first element in the map
     ElemType best_element = priority_map.begin()->first;
     size_t best_priority = priority_map.begin()->second;
 
+    /* traverse the whole map until we find better elements or until
+       it has been fully traversed */
     for (auto it : priority_map) {
         if (it.second > best_priority) {
             best_element = it.first;

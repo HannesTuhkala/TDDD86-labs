@@ -1,3 +1,9 @@
+/*
+ * This is our implementation of four different algorithms for trailblazer.
+ * By Malcolm Vigren (malvi108) and Hannes Tuhkala (hantu447).
+ *
+ */
+
 #include "costs.h"
 #include "trailblazer.h"
 #include <algorithm>
