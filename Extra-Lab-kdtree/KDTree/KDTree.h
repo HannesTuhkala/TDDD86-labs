@@ -313,19 +313,24 @@ void KDTree<N, ElemType>::kNN_recursive(KDNode<N, ElemType>* current_node, const
         return;
     }
 
-    // enqueue current point into the bpq
+    // put the current point into the bpq
     bpq.enqueue(current_node->value, Distance(current_node->point, key));
 
+    // continue with the left & right child
     if (key[level] < current_node->point[level]) {
         kNN_recursive(current_node->left_child, key, bpq, (level + 1) % N);
 
-        if (isOtherPartPlane(current_node, key, bpq, level) || bpq.size() < bpq.maxSize()) {
+        /* there are less element in the bpq than the max size we allocated or
+           there could be points closer on the other side of the plane (in this case) */
+        if (bpq.size() < bpq.maxSize() || isOtherPartPlane(current_node, key, bpq, level)) {
             kNN_recursive(current_node->right_child, key, bpq, (level + 1) % N);
         }
     } else {
         kNN_recursive(current_node->right_child, key, bpq, (level + 1) % N);
 
-        if (isOtherPartPlane(current_node, key, bpq, level) || bpq.size() < bpq.maxSize()) {
+        /* there are less element in the bpq than the max size we allocated or
+           there could be points closer on the other side of the plane (in this case) */
+        if (bpq.size() < bpq.maxSize() || isOtherPartPlane(current_node, key, bpq, level)) {
             kNN_recursive(current_node->left_child, key, bpq, (level + 1) % N);
         }
     }
