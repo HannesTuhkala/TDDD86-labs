@@ -7,7 +7,6 @@
 #include "encoding.h"
 #include <queue>
 
-
 map<int, int> buildFrequencyTable(istream& input) {
     map<int, int> freqTable;
 	int byte;
@@ -112,36 +111,40 @@ int getCharacter(ibitstream& input, HuffmanNode* tree) {
 
 void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
 	while (true) {
-		int character = getCharacter(input, encodingTree);
-		if (character == PSEUDO_EOF) return;
+        int character = getCharacter(input, encodingTree);
+        if (character == NOT_A_CHAR || input.tellg() == -1) return;
 
 		output.put(character);
 	}
 }
 
-void writeHeader(const map<int, int>& freqTable, obitstream& output) {
-    output.put('{');
-
-    for (map<int, int>::const_iterator it = freqTable.begin(); it != freqTable.end(); ++it) {
-        if (it != freqTable.begin()) {
-            output.put(',');
-            output.put(' ');
-        }
-
-        string key = to_string(it->first);
-        for (unsigned int i = 0; i < key.size(); ++i) {
-            output.put(key[i]);
-        }
-
-        output.put(':');
-
-        string freq = to_string(it->second);
-        for (unsigned int i = 0; i < freq.size(); ++i) {
-            output.put(freq[i]);
-        }
+HuffmanNode* decodeNode(ibitstream& input) {
+    if (input.readBit() == 1) {
+        return new HuffmanNode(input.get(), 2, nullptr, nullptr);
+    } else {
+        HuffmanNode* zero = decodeNode(input);
+        HuffmanNode* one = decodeNode(input);
+        return new HuffmanNode(NOT_A_CHAR, 5, zero, one);
     }
+}
 
-    output.put('}');
+HuffmanNode* readHeader(ibitstream& input) {
+    return decodeNode(input);
+}
+
+void encodeNode(HuffmanNode* node, obitstream& output) {
+    if (node->isLeaf()) {
+        output.writeBit(1);
+        output.put(node->character);
+    } else {
+        output.writeBit(0);
+        encodeNode(node->zero, output);
+        encodeNode(node->one, output);
+    }
+}
+
+void writeHeader(HuffmanNode* encodingTree, obitstream& output) {
+    encodeNode(encodingTree, output);
 }
 
 void compress(istream& input, obitstream& output) {
@@ -149,7 +152,7 @@ void compress(istream& input, obitstream& output) {
 	HuffmanNode* encodingTree = buildEncodingTree(freqTable);
 	map<int, string> encodingMap = buildEncodingMap(encodingTree);
 
-    writeHeader(freqTable, output);
+    writeHeader(encodingTree, output);
     input.clear();
     input.seekg(0, ios::beg);
 
@@ -157,47 +160,8 @@ void compress(istream& input, obitstream& output) {
     freeTree(encodingTree);
 }
 
-map<int, int> readHeader(istream& input) {
-    map<int, int> freqTable;
-
-    // Gets the '{'
-    input.get();
-
-    char byte;
-    // While the header doesn't end do..
-    while ((byte = input.get()) != '}') {
-        string key;// continue until input ends at byte = -1
-
-        // get each byte until it finds a ':'
-        while (byte != ':') {
-            key += string(1, byte);
-            byte = input.get();
-        }
-
-        string freq;
-
-        // get each byte until it finds a ',' or a '}'
-        while ((byte = input.get()) != ',' && byte != '}') {
-            freq += string(1, byte);
-        }
-		
-        freqTable.insert(make_pair(atoi(key.c_str()), atoi(freq.c_str())));
-
-        // checking if we are at the last element of the header
-        if (byte == '}') {
-            break;
-        }
-
-        // gets a whitespace ' '
-        input.get();
-    }
-
-	return freqTable;
-}
-
 void decompress(ibitstream& input, ostream& output) {
-    map<int, int> freqTable = readHeader(input);
-    HuffmanNode* encodingTree = buildEncodingTree(freqTable);
+    HuffmanNode* encodingTree = readHeader(input);
     decodeData(input, encodingTree, output);
     freeTree(encodingTree);
 }
