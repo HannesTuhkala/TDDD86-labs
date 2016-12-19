@@ -118,33 +118,33 @@ void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
 	}
 }
 
-HuffmanNode* decodeNode(ibitstream& input) {
+HuffmanNode* decodeHeader(ibitstream& input) {
     if (input.readBit() == 1) {
         return new HuffmanNode(input.get(), 2, nullptr, nullptr);
     } else {
-        HuffmanNode* zero = decodeNode(input);
-        HuffmanNode* one = decodeNode(input);
+        HuffmanNode* zero = decodeHeader(input);
+        HuffmanNode* one = decodeHeader(input);
         return new HuffmanNode(NOT_A_CHAR, 5, zero, one);
     }
 }
 
 HuffmanNode* readHeader(ibitstream& input) {
-    return decodeNode(input);
+    return decodeHeader(input);
 }
 
-void encodeNode(HuffmanNode* node, obitstream& output) {
+void encodeHeader(HuffmanNode* node, obitstream& output) {
     if (node->isLeaf()) {
         output.writeBit(1);
         output.put(node->character);
     } else {
         output.writeBit(0);
-        encodeNode(node->zero, output);
-        encodeNode(node->one, output);
+        encodeHeader(node->zero, output);
+        encodeHeader(node->one, output);
     }
 }
 
 void writeHeader(HuffmanNode* encodingTree, obitstream& output) {
-    encodeNode(encodingTree, output);
+    encodeHeader(encodingTree, output);
 }
 
 void compress(istream& input, obitstream& output) {
