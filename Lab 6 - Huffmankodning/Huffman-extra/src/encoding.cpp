@@ -17,7 +17,7 @@ map<int, int> buildFrequencyTable(istream& input) {
         /* if new character, insert it into the freqtable, otherwise
            increment that characer already in the table*/
 		if (freqTable.count(byte) == 0) {
-			freqTable.insert(pair<int,int>(byte, 1));
+            freqTable.insert(pair<int, int>(byte, 1));
 		} else {
 			freqTable.at(byte)++;
 		}
