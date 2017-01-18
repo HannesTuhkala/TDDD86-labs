@@ -118,13 +118,17 @@ void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
 	}
 }
 
+/*
+ * Decodes with preorder, if 1 we found a leaf and get the char
+ * otherwise continue with preorder
+ */
 HuffmanNode* decodeHeader(ibitstream& input) {
     if (input.readBit() == 1) {
-        return new HuffmanNode(input.get(), 2, nullptr, nullptr);
+        return new HuffmanNode(input.get(), 0, nullptr, nullptr);
     } else {
         HuffmanNode* zero = decodeHeader(input);
         HuffmanNode* one = decodeHeader(input);
-        return new HuffmanNode(NOT_A_CHAR, 5, zero, one);
+        return new HuffmanNode(NOT_A_CHAR, 0, zero, one);
     }
 }
 
@@ -132,6 +136,10 @@ HuffmanNode* readHeader(ibitstream& input) {
     return decodeHeader(input);
 }
 
+/*
+ * Encodes with 1 bit per node and 1 byte per char, write 0 for non-leafs
+ * and 1 for leafs and if leaf add the char
+ */
 void encodeHeader(HuffmanNode* node, obitstream& output) {
     if (node->isLeaf()) {
         output.writeBit(1);
